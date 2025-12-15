@@ -77,12 +77,14 @@
 
     <div id="modalResumo" class="modal hidden">
         <div class="modal-content" style="text-align: left;">
-            <h3 style="margin-bottom: 15px;">📊 Resumo</h3>
+            <h3 style="margin-bottom: 15px;"><span id="resumoTitulo">📊 Resumo</span></h3>
             <div class="card">
                 <h4>Hoje</h4>
                 <div class="entry-row"><span>Banca Inicial:</span> <span id="resumoBancaIni">R$ 0,00</span></div>
                 <div class="entry-row"><span>Banca Atual:</span> <span id="resumoBancaAtual">R$ 0,00</span></div>
                 <div class="entry-row"><span>Resultado:</span> <span id="resumoResultado">R$ 0,00 (0%)</span></div>
+                <div class="entry-row" style="margin-top: 10px; border-top: 1px solid #444;"><span>Greens:</span> <span id="resumoGreens" class="text-green" style="font-weight: bold;">0</span></div>
+                <div class="entry-row" style="border-bottom: none;"><span>Reds:</span> <span id="resumoReds" class="text-red" style="font-weight: bold;">0</span></div>
             </div>
             <h4 style="margin-top: 20px;">Histórico (Últimos 7 dias)</h4>
             <div id="listaHistorico"></div>
@@ -290,21 +292,22 @@
 
     <script>
         // --- ESTADO GLOBAL ---
-        const APP_KEY = 'metodoGolsApp_v4_final';
+        const APP_KEY = 'metodoGolsApp_v5_final';
         let state = {
             bancaInicial: 0,
             bancaAtual: 0,
             stakeValor: 0, 
-            historico: [], // Onde os dias finalizados são armazenados
+            historico: [],
+            // NOVOS CONTADORES GLOBAIS DE OPERAÇÕES
+            greensCountDia: 0, 
+            redsCountDia: 0,
             ciclo2: {
                 ativo: false,
                 configQtd: 4,
                 configPerfil: 0.25,
-                // Valores travados
                 totalAlocado: 0,
                 metaVal: 0,
                 limiteVal: 0,
-                // Valores dinâmicos
                 somaGreens: 0,
                 somaReds: 0,
                 resultadoLiquido: 0,
@@ -349,7 +352,10 @@
             if (saved) {
                 state = JSON.parse(saved);
                 
-                // Se o dia foi iniciado (banca > 0)
+                // Garantir que os novos campos existam
+                if (typeof state.greensCountDia === 'undefined') state.greensCountDia = 0;
+                if (typeof state.redsCountDia === 'undefined') state.redsCountDia = 0;
+
                 if (state.bancaInicial > 0) {
                     restaurarEstadoStart();
                     
@@ -360,12 +366,10 @@
                     } else if (state.cicloFinal.ativo) {
                         document.getElementById('pageStart').classList.add('hidden');
                         document.getElementById('pageCicloFinal').classList.remove('hidden');
-                        // No ciclo final, o usuário terá que gerar os cards novamente
                         document.getElementById('configCicloFinal').classList.remove('hidden');
                         document.getElementById('areaCardsCicloFinal').innerHTML = '';
                     }
                 } else {
-                    // Dia não iniciado, mostra atalho
                     renderUltimoSalvamentoAtalho();
                 }
             }
@@ -407,13 +411,15 @@
             state.bancaInicial = 0;
             state.bancaAtual = 0;
             state.stakeValor = 0;
-            resetCiclo2State(); // Garante que o Ciclo 2 seja limpo
+            state.greensCountDia = 0; // ZERA CONTADOR
+            state.redsCountDia = 0; // ZERA CONTADOR
+            resetCiclo2State(); 
             state.cicloFinal.ativo = false;
             
             saveData();
             
             alert("Dia finalizado com sucesso!");
-            location.reload(); // Recarrega para limpar UI
+            location.reload(); 
         }
 
 
@@ -424,7 +430,7 @@
             const infoDiv = document.getElementById('ultimoSalvamentoInfo');
             if (state.historico.length > 0) {
                 const last = state.historico[0];
-                const bancaFinal = last.bancaFinal || (last.resultado + state.bancaInicial); // fallback seguro
+                const bancaFinal = last.bancaFinal; // Banca final já está salva no histórico
                 
                 infoDiv.innerHTML = `
                     <div style="font-size: 0.9rem; color: #aaa;">
@@ -459,22 +465,15 @@
             document.getElementById('inputBancaInicial').value = state.bancaInicial.toLocaleString('pt-BR', {minimumFractionDigits: 2});
             document.getElementById('inputBancaInicial').disabled = true;
             document.getElementById('btnIniciarBanca').classList.add('hidden');
-            document.getElementById('ultimoSalvamentoInfo').classList.add('hidden'); // Esconde atalho
+            document.getElementById('ultimoSalvamentoInfo').classList.add('hidden'); 
             document.getElementById('startContent').classList.remove('hidden');
             calcularStake();
-        }
-        function calcularStake() {
-            const percent = parseFloat(document.getElementById('selectStakePercent').value);
-            state.stakeValor = state.bancaInicial * percent;
-            document.getElementById('displayStakeVal').innerText = formatMoney(state.stakeValor);
-            document.getElementById('recOddLow').innerText = formatMoney(state.stakeValor * 0.30);
-            document.getElementById('recOddMid').innerText = formatMoney(state.stakeValor * 0.20);
-            document.getElementById('recOddHigh').innerText = formatMoney(state.stakeValor * 0.10);
         }
         function registrarGreenStart() {
             const val = parseMoney(document.getElementById('inputGreenStart').value);
             if (!val) return;
             state.bancaAtual += val;
+            state.greensCountDia++; // CONTADOR GREEN
             document.getElementById('inputGreenStart').value = '';
             saveData();
             alert("Green registrado!");
@@ -483,15 +482,15 @@
             const val = parseMoney(document.getElementById('inputRedStart').value);
             if (!val) return;
             state.bancaAtual -= val;
+            state.redsCountDia++; // CONTADOR RED
             document.getElementById('inputRedStart').value = '';
             document.getElementById('pageStart').classList.add('hidden');
             document.getElementById('pageCiclo2').classList.remove('hidden');
             saveData();
         }
 
-        // --- PÁGINA 2: CICLO 2 ---
 
-        // Função de Reset (Problema 1)
+        // --- PÁGINA 2: CICLO 2 ---
         function resetCiclo2State() {
             state.ciclo2.ativo = false;
             state.ciclo2.totalAlocado = 0;
@@ -523,7 +522,6 @@
             state.ciclo2.metaVal = state.ciclo2.totalAlocado * 0.05; // +5%
             state.ciclo2.limiteVal = state.ciclo2.totalAlocado * 0.15; // -15%
 
-            // Reset dos acumuladores em novo ciclo, mas mantendo as configs
             state.ciclo2.somaGreens = 0;
             state.ciclo2.somaReds = 0;
             state.ciclo2.resultadoLiquido = 0;
@@ -544,7 +542,6 @@
             document.getElementById('c2DisplayLimite').innerText = formatMoney(state.ciclo2.limiteVal);
             atualizarResultadoVisualC2();
 
-            // Re-checar regras caso o ciclo tenha sido carregado
             verificarRegrasCiclo2(false); 
 
             const container = document.getElementById('areaCardsCiclo2');
@@ -552,10 +549,6 @@
             const textoRedMax = formatMoney(valorEntrada * 0.30); 
 
             for (let i = 1; i <= state.ciclo2.configQtd; i++) {
-                // Aqui o problema seria se o usuário tivesse preenchido e recarregado, 
-                // o sistema renderiza cards vazios. O ideal seria salvar o estado de cada card.
-                // Mantendo a solução simples: O usuário não deve recarregar a página durante um ciclo, 
-                // e o estado financeiro é o que importa.
                 const div = document.createElement('div');
                 div.className = 'card';
                 div.innerHTML = `
@@ -579,18 +572,17 @@
             const rVal = parseMoney(document.getElementById(`c2-red-${index}`).value);
             
             if (gVal === 0 && rVal === 0) return;
-
-            // Se o card já foi usado (previne duplicação se o usuário for esperto)
-            // Lógica simples: se um campo foi preenchido, o outro deve estar vazio.
             if (document.getElementById(`c2-actions-${index}`).classList.contains('hidden')) return;
 
             if (gVal > 0) {
                 state.bancaAtual += gVal;
                 state.ciclo2.somaGreens += gVal;
+                state.greensCountDia++; // CONTADOR GREEN
                 document.getElementById(`c2-msg-${index}`).innerHTML = `<span class="text-green">✅ Green: ${formatMoney(gVal)}</span>`;
             } else {
                 state.bancaAtual -= rVal;
                 state.ciclo2.somaReds += rVal;
+                state.redsCountDia++; // CONTADOR RED
                 document.getElementById(`c2-msg-${index}`).innerHTML = `<span class="text-red">❌ Red: ${formatMoney(rVal)}</span>`;
             }
 
@@ -602,7 +594,16 @@
 
             saveData();
             atualizarResultadoVisualC2();
-            verificarRegrasCiclo2(true); // Checa as regras após preencher
+            verificarRegrasCiclo2(true); 
+        }
+
+        function calcularStake() {
+            const percent = parseFloat(document.getElementById('selectStakePercent').value);
+            state.stakeValor = state.bancaInicial * percent;
+            document.getElementById('displayStakeVal').innerText = formatMoney(state.stakeValor);
+            document.getElementById('recOddLow').innerText = formatMoney(state.stakeValor * 0.30);
+            document.getElementById('recOddMid').innerText = formatMoney(state.stakeValor * 0.20);
+            document.getElementById('recOddHigh').innerText = formatMoney(state.stakeValor * 0.10);
         }
 
         function atualizarResultadoVisualC2() {
@@ -620,25 +621,21 @@
             const meta = state.ciclo2.metaVal;
             const limite = state.ciclo2.limiteVal; 
 
-            // Reset alertas
             document.getElementById('alertaMetaCiclo2').classList.add('hidden');
             document.getElementById('alertaLimiteCiclo2').classList.add('hidden');
             document.getElementById('btnIrCicloFinal').classList.add('hidden');
 
-            // REGRA 1: Limite de RED (-15%)
             if (liq <= (limite * -1)) {
                 document.getElementById('alertaLimiteCiclo2').classList.remove('hidden');
                 document.getElementById('btnIrCicloFinal').classList.remove('hidden');
-                // IMPORTANTE: Não bloqueia cards aqui, como solicitado.
             }
 
-            // REGRA 2: Meta Atingida (+5%)
             if (liq >= meta) {
                 document.getElementById('alertaMetaCiclo2').classList.remove('hidden');
                 if (executarAcoes) {
                     setTimeout(() => {
                         alert("Meta do Ciclo 2 atingida! Voltando ao START.");
-                        resetCiclo2State(); // Zera o estado do Ciclo 2 (Problema 1 corrigido)
+                        resetCiclo2State(); 
                         document.getElementById('pageStart').classList.remove('hidden');
                         document.getElementById('pageCiclo2').classList.add('hidden');
                         saveData();
@@ -647,13 +644,10 @@
                 return;
             }
 
-            // REGRA 3: Ciclo Esgotado (Reinício Automático)
             if (executarAcoes && state.ciclo2.cardsUsados >= state.ciclo2.configQtd) {
-                // Só executa se não bateu meta e cards esgotados
                 document.getElementById('msgReincioCiclo2').classList.remove('hidden');
                 setTimeout(() => {
                     document.getElementById('msgReincioCiclo2').classList.add('hidden');
-                    // Reinicia o ciclo usando a banca atual (stake base do dia é mantida)
                     iniciarCiclo2(); 
                 }, 2500);
             }
@@ -706,9 +700,11 @@
             if (gVal > 0) {
                 state.bancaAtual += gVal;
                 state.cicloFinal.greensCount++;
+                state.greensCountDia++; // CONTADOR GREEN
                 msgDiv.innerHTML = `<span class="text-green">✅ Green: ${formatMoney(gVal)}</span>`;
             } else if (rVal > 0) {
                 state.bancaAtual -= rVal;
+                state.redsCountDia++; // CONTADOR RED
                 msgDiv.innerHTML = `<span class="text-red">❌ Red: ${formatMoney(rVal)}</span>`;
             } else return;
 
@@ -726,26 +722,35 @@
             document.getElementById('pageCicloFinal').classList.add('hidden');
             document.getElementById('pageCiclo2').classList.remove('hidden');
             
-            // Reseta UI Final
             document.getElementById('configCicloFinal').classList.remove('hidden');
             document.getElementById('areaCardsCicloFinal').innerHTML = '';
             document.getElementById('msgSucessoFinal').classList.add('hidden');
             document.getElementById('btnConcluidoFinal').classList.add('hidden');
             
-            // Prepara para novo Ciclo 2 (chamando reset)
             resetCiclo2State();
             saveData();
         }
 
-        // --- RESUMO ---
+        // --- RESUMO (CORRIGIDO) ---
         function renderResumo() {
+            // 2️⃣ Nome do dia/sessão no Resumo
+            const sessionName = document.getElementById('sessionName').value;
+            const titleElement = document.getElementById('resumoTitulo');
+            titleElement.innerHTML = `📊 Resumo ${sessionName ? '— "' + sessionName + '"' : ''}`;
+
+
             document.getElementById('resumoBancaIni').innerText = formatMoney(state.bancaInicial);
             document.getElementById('resumoBancaAtual').innerText = formatMoney(state.bancaAtual);
+            
             const diff = state.bancaAtual - state.bancaInicial;
             const perc = state.bancaInicial > 0 ? ((diff/state.bancaInicial)*100).toFixed(2) : 0;
             const elRes = document.getElementById('resumoResultado');
             elRes.innerText = `${formatMoney(diff)} (${perc}%)`;
             elRes.className = diff >= 0 ? 'text-green' : 'text-red';
+            
+            // 1️⃣ Adicionar Greens/Reds
+            document.getElementById('resumoGreens').innerText = state.greensCountDia;
+            document.getElementById('resumoReds').innerText = state.redsCountDia;
             
             const list = document.getElementById('listaHistorico');
             list.innerHTML = '';
