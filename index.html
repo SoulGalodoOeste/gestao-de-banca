@@ -70,6 +70,16 @@
         .alert-box { background: rgba(231, 76, 60, 0.2); border: 1px solid var(--red); color: #ffadad; padding: 10px; border-radius: var(--border-radius); margin: 10px 0; text-align: center; }
         .success-box { background: rgba(46, 204, 113, 0.2); border: 1px solid var(--green); color: #abebc6; padding: 10px; border-radius: var(--border-radius); margin: 10px 0; text-align: center; }
         .info-box { background: rgba(52, 152, 219, 0.2); border: 1px solid var(--primary); color: #aed6f1; padding: 10px; border-radius: var(--border-radius); margin: 10px 0; text-align: center; }
+        .warning-box { background: rgba(255, 165, 0, 0.2); border: 1px solid orange; color: #ffebcc; padding: 12px; border-radius: var(--border-radius); margin: 10px 0; text-align: center; }
+        
+        /* Rodapé */
+        #footer {
+            margin-top: 40px;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: rgba(224, 224, 224, 0.65); /* Opacidade entre 60% e 70% */
+        }
 
     </style>
 </head>
@@ -100,8 +110,8 @@
                 <div class="entry-row"><span>Banca Atual:</span> <span id="modalFinalBanca" style="font-weight: bold;">R$ 0,00</span></div>
             </div>
             <div class="flex">
-                <button class="btn btn-primary" onclick="executarFinalizarDia()">SIM</button>
-                <button class="btn btn-red" onclick="toggleModal('modalFinalizar')">NÃO</button>
+                <button class="btn btn-primary" onclick="executarFinalizarDia()">✅ SIM – Finalizar Dia</button>
+                <button class="btn btn-red" onclick="toggleModal('modalFinalizar')">❌ NÃO – Voltar</button>
             </div>
         </div>
     </div>
@@ -282,23 +292,38 @@
             <div id="areaCardsCicloFinal"></div>
 
             <div id="msgSucessoFinal" class="success-box hidden">
-                ✅ Ciclo final finalizado com sucesso
+                ✅ Ciclo final concluído com 2 Greens de recuperação.
             </div>
+            
+            <div id="msgEncerramentoFinal" class="warning-box hidden">
+                ⚠️ **Limite máximo de RED do dia atingido**<br>
+                Você concluiu o Ciclo Final. O que deseja fazer agora?
+                <hr style="margin: 10px 0; border-color: #ffc266;">
+                <div class="flex">
+                    <button class="btn btn-primary" onclick="reiniciarCicloFinal()">🔄 Reiniciar Ciclo com Banca Atual</button>
+                    <button class="btn btn-red" onclick="abrirModalFinalizar()">🗓 Finalizar Dia</button>
+                </div>
+                <small style="display: block; margin-top: 5px; color: #ffebcc;">Recomendado reiniciar apenas se ainda houver jogos e boas oportunidades.</small>
+            </div>
+
 
             <button id="btnConcluidoFinal" class="btn btn-primary hidden" onclick="voltarParaCiclo2()">Concluído (Voltar)</button>
         </section>
+        
+        <div id="footer">
+            Desenvolvido por Evoket Studios
+        </div>
 
     </div>
 
     <script>
         // --- ESTADO GLOBAL ---
-        const APP_KEY = 'metodoGolsApp_v5_final';
+        const APP_KEY = 'metodoGolsApp_v6_final';
         let state = {
             bancaInicial: 0,
             bancaAtual: 0,
             stakeValor: 0, 
             historico: [],
-            // NOVOS CONTADORES GLOBAIS DE OPERAÇÕES
             greensCountDia: 0, 
             redsCountDia: 0,
             ciclo2: {
@@ -315,6 +340,8 @@
             },
             cicloFinal: {
                 ativo: false,
+                totalCards: 2, // Novo: Total de cards para controle
+                cardsUsados: 0, // Novo: Contagem de cards preenchidos
                 greensCount: 0
             }
         };
@@ -355,6 +382,8 @@
                 // Garantir que os novos campos existam
                 if (typeof state.greensCountDia === 'undefined') state.greensCountDia = 0;
                 if (typeof state.redsCountDia === 'undefined') state.redsCountDia = 0;
+                if (typeof state.cicloFinal.cardsUsados === 'undefined') state.cicloFinal.cardsUsados = 0;
+                if (typeof state.cicloFinal.totalCards === 'undefined') state.cicloFinal.totalCards = 2; // Default
 
                 if (state.bancaInicial > 0) {
                     restaurarEstadoStart();
@@ -367,7 +396,14 @@
                         document.getElementById('pageStart').classList.add('hidden');
                         document.getElementById('pageCicloFinal').classList.remove('hidden');
                         document.getElementById('configCicloFinal').classList.remove('hidden');
-                        document.getElementById('areaCardsCicloFinal').innerHTML = '';
+                        
+                        // Não renderiza cards aqui, deixa o usuário configurar ou carrega o estado de encerramento
+                        if (state.cicloFinal.cardsUsados >= state.cicloFinal.totalCards) {
+                             verificarEncerramentoCicloFinal(); // Vai exibir o banner de ações se já terminou
+                        } else {
+                            // Se não terminou, mas recarregou, o usuário deve re-configurar ou finalizar
+                            document.getElementById('areaCardsCicloFinal').innerHTML = '';
+                        }
                     }
                 } else {
                     renderUltimoSalvamentoAtalho();
@@ -411,10 +447,10 @@
             state.bancaInicial = 0;
             state.bancaAtual = 0;
             state.stakeValor = 0;
-            state.greensCountDia = 0; // ZERA CONTADOR
-            state.redsCountDia = 0; // ZERA CONTADOR
+            state.greensCountDia = 0; 
+            state.redsCountDia = 0; 
             resetCiclo2State(); 
-            state.cicloFinal.ativo = false;
+            resetCicloFinalState(); // Zera o estado do ciclo final
             
             saveData();
             
@@ -422,30 +458,7 @@
             location.reload(); 
         }
 
-
         // --- PÁGINA 1: START ---
-        
-        // PROBLEMA 2 - Início Rápido
-        function renderUltimoSalvamentoAtalho() {
-            const infoDiv = document.getElementById('ultimoSalvamentoInfo');
-            if (state.historico.length > 0) {
-                const last = state.historico[0];
-                const bancaFinal = last.bancaFinal; // Banca final já está salva no histórico
-                
-                infoDiv.innerHTML = `
-                    <div style="font-size: 0.9rem; color: #aaa;">
-                        Última banca final salva: 
-                        <span class="text-yellow">${formatMoney(bancaFinal)}</span>
-                    </div>
-                    <button class="btn btn-outline" style="margin-top: 5px;" onclick="usarUltimaBanca(${bancaFinal})">
-                        Usar banca final do último salvamento
-                    </button>
-                `;
-            } else {
-                infoDiv.innerHTML = `<div style="font-size: 0.9rem; color: #777;">Nenhum dia salvo encontrado.</div>`;
-            }
-        }
-
         function usarUltimaBanca(banca) {
             const input = document.getElementById('inputBancaInicial');
             const val = banca.toFixed(2).replace('.', ',');
@@ -469,11 +482,12 @@
             document.getElementById('startContent').classList.remove('hidden');
             calcularStake();
         }
+
         function registrarGreenStart() {
             const val = parseMoney(document.getElementById('inputGreenStart').value);
             if (!val) return;
             state.bancaAtual += val;
-            state.greensCountDia++; // CONTADOR GREEN
+            state.greensCountDia++; 
             document.getElementById('inputGreenStart').value = '';
             saveData();
             alert("Green registrado!");
@@ -482,11 +496,39 @@
             const val = parseMoney(document.getElementById('inputRedStart').value);
             if (!val) return;
             state.bancaAtual -= val;
-            state.redsCountDia++; // CONTADOR RED
+            state.redsCountDia++; 
             document.getElementById('inputRedStart').value = '';
             document.getElementById('pageStart').classList.add('hidden');
             document.getElementById('pageCiclo2').classList.remove('hidden');
             saveData();
+        }
+        function calcularStake() {
+            const percent = parseFloat(document.getElementById('selectStakePercent').value);
+            state.stakeValor = state.bancaInicial * percent;
+            document.getElementById('displayStakeVal').innerText = formatMoney(state.stakeValor);
+            document.getElementById('recOddLow').innerText = formatMoney(state.stakeValor * 0.30);
+            document.getElementById('recOddMid').innerText = formatMoney(state.stakeValor * 0.20);
+            document.getElementById('recOddHigh').innerText = formatMoney(state.stakeValor * 0.10);
+        }
+
+        function renderUltimoSalvamentoAtalho() {
+            const infoDiv = document.getElementById('ultimoSalvamentoInfo');
+            if (state.historico.length > 0) {
+                const last = state.historico[0];
+                const bancaFinal = last.bancaFinal; 
+                
+                infoDiv.innerHTML = `
+                    <div style="font-size: 0.9rem; color: #aaa;">
+                        Última banca final salva: 
+                        <span class="text-yellow">${formatMoney(bancaFinal)}</span>
+                    </div>
+                    <button class="btn btn-outline" style="margin-top: 5px;" onclick="usarUltimaBanca(${bancaFinal})">
+                        Usar banca final do último salvamento
+                    </button>
+                `;
+            } else {
+                infoDiv.innerHTML = `<div style="font-size: 0.9rem; color: #777;">Nenhum dia salvo encontrado.</div>`;
+            }
         }
 
 
@@ -531,8 +573,38 @@
             saveData();
             renderizarCiclo2Ativo();
         }
+        function aplicarResultadoC2(index) {
+            const gVal = parseMoney(document.getElementById(`c2-green-${index}`).value);
+            const rVal = parseMoney(document.getElementById(`c2-red-${index}`).value);
+            
+            if (gVal === 0 && rVal === 0) return;
+            if (document.getElementById(`c2-actions-${index}`).classList.contains('hidden')) return;
+
+            if (gVal > 0) {
+                state.bancaAtual += gVal;
+                state.ciclo2.somaGreens += gVal;
+                state.greensCountDia++; 
+                document.getElementById(`c2-msg-${index}`).innerHTML = `<span class="text-green">✅ Green: ${formatMoney(gVal)}</span>`;
+            } else {
+                state.bancaAtual -= rVal;
+                state.ciclo2.somaReds += rVal;
+                state.redsCountDia++; 
+                document.getElementById(`c2-msg-${index}`).innerHTML = `<span class="text-red">❌ Red: ${formatMoney(rVal)}</span>`;
+            }
+
+            state.ciclo2.resultadoLiquido = state.ciclo2.somaGreens - state.ciclo2.somaReds;
+            state.ciclo2.cardsUsados++;
+
+            document.getElementById(`c2-actions-${index}`).classList.add('hidden');
+            document.getElementById(`c2-msg-${index}`).classList.remove('hidden');
+
+            saveData();
+            atualizarResultadoVisualC2();
+            verificarRegrasCiclo2(true); 
+        }
 
         function renderizarCiclo2Ativo() {
+            // ... (função igual à anterior)
             document.getElementById('configCiclo2').classList.add('hidden');
             document.getElementById('c2Dashboard').classList.remove('hidden');
             document.getElementById('areaCardsCiclo2').innerHTML = '';
@@ -566,46 +638,6 @@
                 container.appendChild(div);
             }
         }
-
-        function aplicarResultadoC2(index) {
-            const gVal = parseMoney(document.getElementById(`c2-green-${index}`).value);
-            const rVal = parseMoney(document.getElementById(`c2-red-${index}`).value);
-            
-            if (gVal === 0 && rVal === 0) return;
-            if (document.getElementById(`c2-actions-${index}`).classList.contains('hidden')) return;
-
-            if (gVal > 0) {
-                state.bancaAtual += gVal;
-                state.ciclo2.somaGreens += gVal;
-                state.greensCountDia++; // CONTADOR GREEN
-                document.getElementById(`c2-msg-${index}`).innerHTML = `<span class="text-green">✅ Green: ${formatMoney(gVal)}</span>`;
-            } else {
-                state.bancaAtual -= rVal;
-                state.ciclo2.somaReds += rVal;
-                state.redsCountDia++; // CONTADOR RED
-                document.getElementById(`c2-msg-${index}`).innerHTML = `<span class="text-red">❌ Red: ${formatMoney(rVal)}</span>`;
-            }
-
-            state.ciclo2.resultadoLiquido = state.ciclo2.somaGreens - state.ciclo2.somaReds;
-            state.ciclo2.cardsUsados++;
-
-            document.getElementById(`c2-actions-${index}`).classList.add('hidden');
-            document.getElementById(`c2-msg-${index}`).classList.remove('hidden');
-
-            saveData();
-            atualizarResultadoVisualC2();
-            verificarRegrasCiclo2(true); 
-        }
-
-        function calcularStake() {
-            const percent = parseFloat(document.getElementById('selectStakePercent').value);
-            state.stakeValor = state.bancaInicial * percent;
-            document.getElementById('displayStakeVal').innerText = formatMoney(state.stakeValor);
-            document.getElementById('recOddLow').innerText = formatMoney(state.stakeValor * 0.30);
-            document.getElementById('recOddMid').innerText = formatMoney(state.stakeValor * 0.20);
-            document.getElementById('recOddHigh').innerText = formatMoney(state.stakeValor * 0.10);
-        }
-
         function atualizarResultadoVisualC2() {
             const liq = state.ciclo2.resultadoLiquido;
             const total = state.ciclo2.totalAlocado;
@@ -657,21 +689,55 @@
             document.getElementById('pageCiclo2').classList.add('hidden');
             document.getElementById('pageCicloFinal').classList.remove('hidden');
             state.cicloFinal.ativo = true;
+            resetCicloFinalState(); // Garante que comece do zero
             saveData();
         }
 
-        // --- PÁGINA 3: CICLO FINAL ---
+        // --- PÁGINA 3: CICLO FINAL (CORRIGIDA) ---
+        
+        function resetCicloFinalState() {
+            state.cicloFinal.ativo = false;
+            state.cicloFinal.cardsUsados = 0;
+            state.cicloFinal.greensCount = 0;
+        }
+
+        // NOVO: Função para Reiniciar o Dia/Ciclo a partir do Ciclo Final
+        function reiniciarCicloFinal() {
+            alert("Redirecionando para o START com a banca atual.");
+            resetCiclo2State(); 
+            resetCicloFinalState();
+            
+            // O estado da bancaAtual é mantido, apenas zeramos os ciclos
+            document.getElementById('pageCicloFinal').classList.add('hidden');
+            document.getElementById('pageStart').classList.remove('hidden');
+            
+            // Força a re-renderização do START (principalmente a Stake)
+            restaurarEstadoStart();
+            saveData();
+        }
+
+
         function gerarCardsCicloFinal() {
+            // Verifica se já não foi configurado
+            if (state.cicloFinal.ativo && state.cicloFinal.cardsUsados > 0) return;
+
             const perfil = parseFloat(document.getElementById('cfPerfil').value);
             const valEntrada = state.stakeValor * perfil; 
             const valRedMax = valEntrada * 0.30; 
 
             state.cicloFinal.greensCount = 0;
+            state.cicloFinal.cardsUsados = 0;
+            state.cicloFinal.totalCards = 2;
+
             const container = document.getElementById('areaCardsCicloFinal');
             container.innerHTML = '';
             document.getElementById('configCicloFinal').classList.add('hidden');
+            document.getElementById('msgEncerramentoFinal').classList.add('hidden'); // Esconde alerta de encerramento
+            document.getElementById('msgSucessoFinal').classList.add('hidden'); 
+            document.getElementById('btnConcluidoFinal').classList.add('hidden');
+            
 
-            for (let i = 1; i <= 2; i++) {
+            for (let i = 1; i <= state.cicloFinal.totalCards; i++) {
                 const div = document.createElement('div');
                 div.className = 'card';
                 div.innerHTML = `
@@ -688,6 +754,7 @@
                 `;
                 container.appendChild(div);
             }
+            saveData();
         }
 
         function aplicarResultadoCF(index) {
@@ -700,21 +767,40 @@
             if (gVal > 0) {
                 state.bancaAtual += gVal;
                 state.cicloFinal.greensCount++;
-                state.greensCountDia++; // CONTADOR GREEN
+                state.greensCountDia++; 
                 msgDiv.innerHTML = `<span class="text-green">✅ Green: ${formatMoney(gVal)}</span>`;
             } else if (rVal > 0) {
                 state.bancaAtual -= rVal;
-                state.redsCountDia++; // CONTADOR RED
+                state.redsCountDia++; 
                 msgDiv.innerHTML = `<span class="text-red">❌ Red: ${formatMoney(rVal)}</span>`;
             } else return;
+
+            state.cicloFinal.cardsUsados++; // Contagem de uso
 
             document.getElementById(`cf-actions-${index}`).classList.add('hidden');
             msgDiv.classList.remove('hidden');
             saveData();
 
-            if (state.cicloFinal.greensCount >= 2) {
-                document.getElementById('msgSucessoFinal').classList.remove('hidden');
-                document.getElementById('btnConcluidoFinal').classList.remove('hidden');
+            verificarEncerramentoCicloFinal(); // Checa se deve liberar as ações
+        }
+
+        // NOVO: Função para checar e exibir as ações no Ciclo Final
+        function verificarEncerramentoCicloFinal() {
+            if (state.cicloFinal.cardsUsados >= state.cicloFinal.totalCards) {
+                // Remove a opção de configurar (caso o usuário volte no botão do navegador ou recarregue)
+                document.getElementById('configCicloFinal').classList.add('hidden'); 
+                
+                if (state.cicloFinal.greensCount >= 2) {
+                    // Meta de 2 Greens atingida
+                    document.getElementById('msgSucessoFinal').classList.remove('hidden');
+                    document.getElementById('btnConcluidoFinal').classList.remove('hidden');
+                    document.getElementById('msgEncerramentoFinal').classList.add('hidden');
+                } else {
+                    // 2 cards preenchidos, mas sem 2 greens (prejuízo ou 1 green)
+                    document.getElementById('msgEncerramentoFinal').classList.remove('hidden');
+                    document.getElementById('msgSucessoFinal').classList.add('hidden');
+                    document.getElementById('btnConcluidoFinal').classList.add('hidden');
+                }
             }
         }
 
@@ -722,22 +808,24 @@
             document.getElementById('pageCicloFinal').classList.add('hidden');
             document.getElementById('pageCiclo2').classList.remove('hidden');
             
+            // Reseta UI Final
             document.getElementById('configCicloFinal').classList.remove('hidden');
             document.getElementById('areaCardsCicloFinal').innerHTML = '';
             document.getElementById('msgSucessoFinal').classList.add('hidden');
             document.getElementById('btnConcluidoFinal').classList.add('hidden');
+            document.getElementById('msgEncerramentoFinal').classList.add('hidden');
             
+            // Prepara para novo Ciclo 2
             resetCiclo2State();
+            resetCicloFinalState(); // Zera o estado do ciclo final
             saveData();
         }
 
-        // --- RESUMO (CORRIGIDO) ---
+        // --- RESUMO ---
         function renderResumo() {
-            // 2️⃣ Nome do dia/sessão no Resumo
             const sessionName = document.getElementById('sessionName').value;
             const titleElement = document.getElementById('resumoTitulo');
             titleElement.innerHTML = `📊 Resumo ${sessionName ? '— "' + sessionName + '"' : ''}`;
-
 
             document.getElementById('resumoBancaIni').innerText = formatMoney(state.bancaInicial);
             document.getElementById('resumoBancaAtual').innerText = formatMoney(state.bancaAtual);
@@ -748,7 +836,6 @@
             elRes.innerText = `${formatMoney(diff)} (${perc}%)`;
             elRes.className = diff >= 0 ? 'text-green' : 'text-red';
             
-            // 1️⃣ Adicionar Greens/Reds
             document.getElementById('resumoGreens').innerText = state.greensCountDia;
             document.getElementById('resumoReds').innerText = state.redsCountDia;
             
@@ -766,5 +853,3 @@
     </script>
 </body>
 </html>
-
-
