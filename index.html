@@ -17,15 +17,17 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+        
         body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 80px; }
         
-        /* Classes Utilitárias */
+        /* Utility Classes */
         .text-green { color: var(--green); }
         .text-red { color: var(--red); }
         .text-yellow { color: var(--yellow); }
         .text-center { text-align: center; }
         .hidden { display: none !important; }
         .flex { display: flex; gap: 10px; }
+        .mt-10 { margin-top: 10px; }
         
         .btn { border: none; padding: 12px; border-radius: var(--border-radius); font-weight: bold; cursor: pointer; width: 100%; margin-top: 10px; font-size: 1rem; transition: opacity 0.2s; }
         .btn:active { opacity: 0.8; }
@@ -33,14 +35,15 @@
         .btn-red { background-color: var(--red); color: white; }
         .btn-primary { background-color: var(--primary); color: white; }
         .btn-outline { background-color: transparent; border: 1px solid var(--text-color); color: var(--text-color); }
-        .btn:disabled { background: #333; color: #777; cursor: not-allowed; border-color: #444; }
         
         input, select { width: 100%; padding: 12px; margin: 5px 0; background: #2c2c2c; border: 1px solid #444; color: white; border-radius: var(--border-radius); font-size: 1rem; }
+        input:disabled { background: #1a1a1a; color: #777; border-color: #333; }
+        input.error-border { border-color: var(--red); }
 
         /* Topo Fixo */
         header { position: sticky; top: 0; background: #1a1a1a; padding: 15px; border-bottom: 2px solid #333; z-index: 100; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .header-info h4 { font-size: 0.7rem; color: #aaa; letter-spacing: 0.5px; }
-        .header-info span { font-size: 1rem; }
+        .header-info h4 { font-size: 0.8rem; color: #aaa; }
+        .header-info h2 { font-size: 1.1rem; margin-top: 2px; }
         .header-actions { display: flex; gap: 15px; }
         .btn-icon { background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-color); }
 
@@ -48,17 +51,38 @@
         .container { max-width: 600px; margin: 0 auto; padding: 15px; }
         .card { background: var(--card-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 15px; border: 1px solid #333; }
         
+        /* Dashboard Ciclo 2 */
+        .dashboard-c2 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px; text-align: center; }
+        .dash-item { background: #252525; padding: 8px; border-radius: 5px; border: 1px solid #333; }
+        .dash-label { font-size: 0.7rem; color: #888; display: block; }
+        .dash-val { font-size: 0.9rem; font-weight: bold; }
+
+        /* Tooltip */
         .section-title { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; color: var(--yellow); }
+        .info-icon { background: #444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; cursor: pointer; }
+        .tooltip-box { background: #333; padding: 10px; border-radius: var(--border-radius); font-size: 0.9rem; margin-bottom: 15px; border-left: 3px solid var(--yellow); }
 
         /* Modal */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; display: flex; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: var(--card-bg); padding: 20px; border-radius: var(--border-radius); width: 100%; max-width: 500px; max-height: 80vh; overflow-y: auto; text-align: center; }
-        
+        .history-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; text-align: left; }
+
+        /* Logic Specifics */
         .entry-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 0.9rem; }
+        .alert-box { background: rgba(231, 76, 60, 0.2); border: 1px solid var(--red); color: #ffadad; padding: 10px; border-radius: var(--border-radius); margin: 10px 0; text-align: center; }
+        .success-box { background: rgba(46, 204, 113, 0.2); border: 1px solid var(--green); color: #abebc6; padding: 10px; border-radius: var(--border-radius); margin: 10px 0; text-align: center; }
+        .info-box { background: rgba(52, 152, 219, 0.2); border: 1px solid var(--primary); color: #aed6f1; padding: 10px; border-radius: var(--border-radius); margin: 10px 0; text-align: center; }
+        .warning-box { background: rgba(255, 165, 0, 0.2); border: 1px solid orange; color: #ffebcc; padding: 12px; border-radius: var(--border-radius); margin: 10px 0; text-align: center; }
         
         /* Rodapé */
-        #footer { margin-top: 40px; padding: 10px 0; text-align: center; font-size: 0.8rem; }
-        #footer a { color: rgba(224, 224, 224, 0.65); text-decoration: none; }
+        #footer {
+            margin-top: 40px;
+            padding: 10px 0;
+            text-align: center;
+            font-size: 0.8rem;
+            color: rgba(224, 224, 224, 0.65);
+        }
+
     </style>
 </head>
 <body>
@@ -66,24 +90,56 @@
     <div id="modalResumo" class="modal hidden">
         <div class="modal-content" style="text-align: left;">
             <h3 style="margin-bottom: 15px;"><span id="resumoTitulo">📊 Resumo</span></h3>
-            <div id="resumoGeral"></div>
+            <div class="card">
+                <h4>Hoje</h4>
+                <div class="entry-row"><span>Banca Inicial:</span> <span id="resumoBancaIni">R$ 0,00</span></div>
+                <div class="entry-row"><span>Banca Atual:</span> <span id="resumoBancaAtual">R$ 0,00</span></div>
+                <div class="entry-row"><span>Resultado:</span> <span id="resumoResultado">R$ 0,00 (0%)</span></div>
+                <div class="entry-row" style="margin-top: 10px; border-top: 1px solid #444;"><span>Greens:</span> <span id="resumoGreens" class="text-green" style="font-weight: bold;">0</span></div>
+                <div class="entry-row" style="border-bottom: none;"><span>Reds:</span> <span id="resumoReds" class="text-red" style="font-weight: bold;">0</span></div>
+            </div>
             <h4 style="margin-top: 20px;">Histórico (Últimos 7 dias)</h4>
             <div id="listaHistorico"></div>
             <button class="btn btn-primary" onclick="toggleModal('modalResumo')">Fechar</button>
         </div>
     </div>
 
+    <div id="modalFinalizar" class="modal hidden">
+        <div class="modal-content">
+            <h3 style="margin-bottom: 15px;">🗓 Finalizar Dia</h3>
+            <p>Deseja encerrar o dia/sessão com os valores atuais da banca?</p>
+            <div class="card" style="margin-top: 15px; text-align: left;">
+                <div class="entry-row"><span>Banca Atual:</span> <span id="modalFinalBanca" style="font-weight: bold;">R$ 0,00</span></div>
+            </div>
+            <div class="flex">
+                <button class="btn btn-primary" onclick="executarFinalizarDia()">✅ SIM – Finalizar Dia</button>
+                <button class="btn btn-red" onclick="toggleModal('modalFinalizar')">❌ NÃO – Voltar</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="modalEditBanca" class="modal hidden">
+        <div class="modal-content">
+            <h3>⚙️ Ajustar Banca Manualmente</h3>
+            <p style="font-size: 0.8rem; color: #aaa; margin-bottom: 10px;">Use apenas se precisar corrigir o valor inicial.</p>
+            <input type="text" id="inputEditBanca" placeholder="Nova Banca Inicial (R$)" oninput="maskCurrency(this)">
+            <button class="btn btn-primary" onclick="salvarAjusteBanca()">Salvar</button>
+            <button class="btn btn-red" onclick="toggleModal('modalEditBanca')">Cancelar</button>
+        </div>
+    </div>
+
     <header>
-        <div class="header-info">
-            <h4>BANCA INICIAL</h4>
-            <span id="topoBancaInicial">R$ 0,00</span>
+        <div class="header-info" onclick="toggleModal('modalEditBanca')" style="cursor: pointer;">
+            <h4>BANCA INICIAL (Editar)</h4>
+            <span id="topoBancaInicial" class="text-white">R$ 0,00</span>
         </div>
         <div class="header-info text-center">
             <h4>BANCA ATUAL</h4>
-            <span id="topoBancaAtual" style="font-weight: bold;">R$ 0,00</span>
+            <span id="topoBancaAtual" style="font-weight: bold; font-size: 1.2rem;">R$ 0,00</span>
         </div>
         <div class="header-actions">
-            <button class="btn-icon" title="Resumo" onclick="toggleModal('modalResumo')">📊</button>
+            <button class="btn-icon" onclick="abrirModalFinalizar()">🗓</button>
+            <button class="btn-icon" onclick="toggleModal('modalResumo')">📊</button>
         </div>
     </header>
 
@@ -91,135 +147,756 @@
 
         <section id="pageStart">
             <div class="section-title">
-                <h2>🟦 START (Gestão de Risco)</h2>
+                <h2>🟦 START (Controle do Dia)</h2>
             </div>
 
-            <div class="card">
-                <h3>1️⃣ Nome do Dia/Sessão</h3>
-                <input type="text" id="sessionName" placeholder="Ex: Dom 15/12" oninput="validarSessao()">
-                <p id="msgAvisoNome" class="text-yellow" style="font-size: 0.8rem; margin-top: 5px;">
-                    ⚠️ Informe o nome do dia/sessão para iniciar.
-                </p>
+            <div class="card" id="cardConfigDia">
+                <h3>1️⃣ Configuração do Dia</h3>
+                <label>Nome do dia/sessão <span class="text-red">*</span></label>
+                <input type="text" id="sessionNameInput" placeholder="Ex: Dom 15/12" oninput="validarInputNome(this)">
+                
+                <div id="blockBancaInicial" class="hidden mt-10" style="border-top: 1px solid #333; padding-top: 10px;">
+                    <label>Banca Inicial (R$)</label>
+                    <input type="text" id="inputBancaInicial" placeholder="0,00" oninput="maskCurrency(this)">
+                </div>
             </div>
 
-            <div id="areaOperacoesStart">
+            <div id="startContent">
+                
                 <div class="card">
                     <h3>2️⃣ Definição da Stake</h3>
-                    <label>Perfil de Stake:</label>
+                    <label>Perfil:</label>
                     <select id="selectStakePercent" onchange="calcularStake()">
                         <option value="0.05">5% - Conservador</option>
                         <option value="0.10" selected>10% - Recomendado</option>
                         <option value="0.20">20% - Agressivo</option>
                     </select>
                     <div style="margin-top: 10px; font-weight: bold;">
-                        Stake: <span id="displayStakeVal" class="text-green">R$ 0,00</span>
+                        Stake Calculada: <span id="displayStakeVal" class="text-green">R$ 0,00</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="section-title" style="margin:0">
+                        <h3>3️⃣ Entradas Recomendadas</h3>
+                        <div class="info-icon" onclick="toggleTooltip('ttStart')">?</div>
+                    </div>
+                    <div id="ttStart" class="tooltip-box hidden">
+                        <strong>START:</strong> Identifique a partida que foge do padrão.
+                    </div>
+                    <div style="margin-top: 10px;">
+                        <div class="entry-row"><span>Odd até 1.05 (30%)</span> <span id="recOddLow">R$ 0,00</span></div>
+                        <div class="entry-row"><span>Odd até 1.10 (20%)</span> <span id="recOddMid">R$ 0,00</span></div>
+                        <div class="entry-row"><span>Odd + de 1.10 (10%)</span> <span id="recOddHigh">R$ 0,00</span></div>
                     </div>
                 </div>
 
                 <div class="card" style="border-color: var(--green);">
-                    <h3 class="text-green">🟢 REGISTRAR GREEN</h3>
-                    <input type="text" id="inputGreenStart" placeholder="Valor Bruto (R$)" oninput="maskCurrency(this)">
-                    <button id="btnGreen" class="btn btn-green" onclick="registrarGreenStart()">Confirmar Green</button>
+                    <h3 class="text-green">🟢 REGISTRO DE GREEN</h3>
+                    <input type="text" id="inputGreenStart" placeholder="Valor do Green (R$)" oninput="maskCurrency(this)">
+                    <button class="btn btn-green" onclick="registrarGreenStart()">Confirmar Green</button>
                 </div>
 
                 <div class="card" style="border-color: var(--red);">
-                    <h3 class="text-red">🔴 REGISTRAR RED</h3>
+                    <h3 class="text-red">🔴 REGISTRO DE RED</h3>
                     <input type="text" id="inputRedStart" placeholder="Valor do Red (R$)" oninput="maskCurrency(this)">
-                    <button id="btnRed" class="btn btn-red" onclick="registrarRedStart()">Confirmar Red</button>
+                    <button class="btn btn-red" onclick="registrarRedStart()">Confirmar Red</button>
                 </div>
             </div>
         </section>
 
+        <section id="pageCiclo2" class="hidden">
+            <div class="section-title">
+                <h2>🟨 CICLO 2 (Busca de Lucro)</h2>
+                <div class="info-icon" onclick="toggleTooltip('ttCiclo2')">?</div>
+            </div>
+            <div id="ttCiclo2" class="tooltip-box hidden">
+                <strong>Ciclo 2:</strong> Buscamos lucro baseado no Total Alocado.
+                <br>Meta: +5% do Total Alocado.
+                <br>Stop: -15% do Total Alocado.
+            </div>
+
+            <div id="c2Dashboard" class="card hidden">
+                <h4 style="margin-bottom: 10px; color: var(--yellow);">📊 Controle do Ciclo</h4>
+                <div class="dashboard-c2">
+                    <div class="dash-item">
+                        <span class="dash-label">Alocado</span>
+                        <span id="c2DisplayTotal" class="dash-val">R$ 0,00</span>
+                    </div>
+                    <div class="dash-item" style="border-color: var(--green);">
+                        <span class="dash-label">Meta (+5%)</span>
+                        <span id="c2DisplayMeta" class="dash-val text-green">R$ 0,00</span>
+                    </div>
+                    <div class="dash-item" style="border-color: var(--red);">
+                        <span class="dash-label">Limite (-15%)</span>
+                        <span id="c2DisplayLimite" class="dash-val text-red">R$ 0,00</span>
+                    </div>
+                </div>
+                <div class="text-center" style="margin-top: 5px; border-top: 1px solid #333; padding-top: 5px;">
+                    Res. Líquido: <span id="c2DisplayResultado" style="font-weight: bold;">R$ 0,00 (0%)</span>
+                </div>
+            </div>
+
+            <div class="card" id="configCiclo2">
+                <h3>1️⃣ Configuração do Ciclo</h3>
+                <label>Qtd Entradas (2 a 6)</label>
+                <select id="c2Qtd">
+                    <option value="2">2 Entradas</option>
+                    <option value="3">3 Entradas</option>
+                    <option value="4" selected>4 Entradas</option>
+                    <option value="5">5 Entradas</option>
+                    <option value="6">6 Entradas</option>
+                </select>
+
+                <label>Perfil (% da Stake por entrada)</label>
+                <select id="c2Perfil">
+                    <option value="0.20">20% - Conservador</option>
+                    <option value="0.25" selected>25% - Padrão</option>
+                    <option value="0.30">30% - Agressivo</option>
+                </select>
+
+                <button class="btn btn-primary" onclick="iniciarCiclo2()">Gerar Ciclo</button>
+            </div>
+
+            <div id="areaCardsCiclo2">
+                </div>
+
+            <div id="alertaMetaCiclo2" class="success-box hidden">
+                ✅ Parabéns! Meta do Ciclo 2 atingida (+5%).<br>Redirecionando para START...
+            </div>
+
+            <div id="alertaLimiteCiclo2" class="alert-box hidden">
+                🚨 Limite de red do Ciclo 2 atingido (-15%).<br>
+                Você pode seguir para o Ciclo Final ou continuar preenchendo os cards se houver jogos em andamento.
+            </div>
+
+            <div id="msgReincioCiclo2" class="info-box hidden">
+                ℹ️ Ciclo 2 concluído sem atingir meta ou limite.<br>Iniciando novo Ciclo 2 automaticamente...
+            </div>
+
+            <button id="btnIrCicloFinal" class="btn btn-red hidden" onclick="irParaCicloFinal()">Ir para Ciclo Final (Recuperação)</button>
+        </section>
+
+        <section id="pageCicloFinal" class="hidden">
+            <div class="section-title">
+                <h2>🟥 CICLO FINAL (Recuperação)</h2>
+                <div class="info-icon" onclick="toggleTooltip('ttCicloFinal')">?</div>
+            </div>
+            <div id="ttCicloFinal" class="tooltip-box hidden">
+                <strong>Ciclo Final:</strong> Recuperação de Red. Busque apenas recuperar o prejuízo.
+            </div>
+
+            <div class="card" id="configCicloFinal">
+                <h3>1️⃣ Configuração</h3>
+                <label>Percentual da Stake</label>
+                <select id="cfPerfil">
+                    <option value="0.75">75% - Conservador</option>
+                    <option value="0.80" selected>80% - Recomendado</option>
+                    <option value="0.85">85% - Agressivo</option>
+                </select>
+                <button class="btn btn-primary" onclick="gerarCardsCicloFinal()">Gerar 2 Entradas</button>
+            </div>
+
+            <div id="areaCardsCicloFinal"></div>
+
+            <div id="msgSucessoFinal" class="success-box hidden">
+                ✅ Ciclo final concluído com 2 Greens de recuperação.
+            </div>
+            
+            <div id="msgEncerramentoFinal" class="warning-box hidden">
+                ⚠️ **Limite máximo de RED do dia atingido**<br>
+                Você concluiu o Ciclo Final. O que deseja fazer agora?
+                <hr style="margin: 10px 0; border-color: #ffc266;">
+                <div class="flex">
+                    <button class="btn btn-primary" onclick="reiniciarCicloFinal()">🔄 Reiniciar Ciclo com Banca Atual</button>
+                    <button class="btn btn-red" onclick="abrirModalFinalizar()">🗓 Finalizar Dia</button>
+                </div>
+                <small style="display: block; margin-top: 5px; color: #ffebcc;">Recomendado reiniciar apenas se ainda houver jogos e boas oportunidades.</small>
+            </div>
+
+
+            <button id="btnConcluidoFinal" class="btn btn-primary hidden" onclick="voltarParaCiclo2()">Concluído (Voltar)</button>
+        </section>
+        
         <div id="footer">
-            <a href="https://evoketstudio.com.br/" target="_blank">Desenvolvido por Evoket Studios</a>
+            Desenvolvido por Evoket Studio
         </div>
+
     </div>
 
     <script>
-        const APP_KEY = 'metodoGols_v8';
+        // --- ESTADO GLOBAL ---
+        const APP_KEY = 'metodoGolsApp_v7_sessao';
         let state = {
-            sessionName: '',
-            bancaInicial: 1000, // Exemplo de banca já existente
-            bancaAtual: 1000,
-            historico: []
+            sessionName: '', // Novo campo obrigatório
+            bancaInicial: 0,
+            bancaAtual: 0,
+            stakeValor: 0, 
+            historico: [],
+            greensCountDia: 0, 
+            redsCountDia: 0,
+            ciclo2: {
+                ativo: false,
+                configQtd: 4,
+                configPerfil: 0.25,
+                totalAlocado: 0,
+                metaVal: 0,
+                limiteVal: 0,
+                somaGreens: 0,
+                somaReds: 0,
+                resultadoLiquido: 0,
+                cardsUsados: 0
+            },
+            cicloFinal: {
+                ativo: false,
+                totalCards: 2,
+                cardsUsados: 0,
+                greensCount: 0
+            }
         };
 
-        function validarSessao() {
-            const nome = document.getElementById('sessionName').value.trim();
-            const aviso = document.getElementById('msgAvisoNome');
-            const btns = [document.getElementById('btnGreen'), document.getElementById('btnRed')];
+        // --- UTILITÁRIOS ---
+        function formatMoney(value) {
+            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+        function parseMoney(valueStr) {
+            if (!valueStr) return 0;
+            if (valueStr.includes(',')) valueStr = valueStr.replace(/\./g, '').replace(',', '.');
+            return parseFloat(valueStr);
+        }
+        function maskCurrency(input) {
+            let value = input.value.replace(/\D/g, "");
+            value = (value / 100).toFixed(2) + "";
+            value = value.replace(".", ",");
+            value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+            input.value = value;
+        }
+        function toggleTooltip(id) { document.getElementById(id).classList.toggle('hidden'); }
+        function toggleModal(id) {
+            document.getElementById(id).classList.toggle('hidden');
+            if(id === 'modalResumo') renderResumo();
+        }
 
-            if (nome.length > 0) {
-                aviso.classList.add('hidden');
-                btns.forEach(b => b.disabled = false);
-                state.sessionName = nome;
-                save();
+        // --- SALVAMENTO/CARREGAMENTO ---
+        function saveData() {
+            localStorage.setItem(APP_KEY, JSON.stringify(state));
+            updateHeader();
+        }
+        
+        function loadData() {
+            const saved = localStorage.getItem(APP_KEY);
+            if (saved) {
+                state = JSON.parse(saved);
+                
+                // Migração segura
+                if (typeof state.sessionName === 'undefined') state.sessionName = '';
+                if (typeof state.greensCountDia === 'undefined') state.greensCountDia = 0;
+                if (typeof state.redsCountDia === 'undefined') state.redsCountDia = 0;
+                
+                // Preenche o nome da sessão se existir
+                if (state.sessionName) {
+                    document.getElementById('sessionNameInput').value = state.sessionName;
+                }
+
+                // Renderiza estado
+                if (state.bancaInicial > 0) {
+                    calcularStake(); // Recalcula visual da stake
+                    
+                    if (state.ciclo2.ativo) {
+                        document.getElementById('pageStart').classList.add('hidden');
+                        document.getElementById('pageCiclo2').classList.remove('hidden');
+                        renderizarCiclo2Ativo();
+                    } else if (state.cicloFinal.ativo) {
+                        document.getElementById('pageStart').classList.add('hidden');
+                        document.getElementById('pageCicloFinal').classList.remove('hidden');
+                        document.getElementById('configCicloFinal').classList.remove('hidden');
+                        if (state.cicloFinal.cardsUsados >= state.cicloFinal.totalCards) {
+                             verificarEncerramentoCicloFinal();
+                        } else {
+                            document.getElementById('areaCardsCicloFinal').innerHTML = '';
+                        }
+                    }
+                }
+            }
+            
+            // Controle visual do input de banca (aparece só se banca for 0)
+            verificarInputBancaInicial();
+            updateHeader();
+        }
+
+        function updateHeader() {
+            document.getElementById('topoBancaInicial').innerText = formatMoney(state.bancaInicial);
+            const elAtual = document.getElementById('topoBancaAtual');
+            elAtual.innerText = formatMoney(state.bancaAtual);
+            elAtual.style.color = state.bancaAtual >= state.bancaInicial ? 'var(--green)' : 'var(--red)';
+        }
+
+        // --- VALIDAÇÃO DE SESSÃO (REGRA PRINCIPAL) ---
+        function validarInputNome(input) {
+            state.sessionName = input.value;
+            // Se o usuário digitou nome e banca era 0, talvez ele esteja setando agora
+            // Salva input da banca se estiver visível
+            const inputBanca = document.getElementById('inputBancaInicial');
+            if (!document.getElementById('blockBancaInicial').classList.contains('hidden') && inputBanca.value) {
+                const val = parseMoney(inputBanca.value);
+                if (val > 0) {
+                     state.bancaInicial = val;
+                     state.bancaAtual = val;
+                }
+            }
+            saveData();
+        }
+        
+        function verificarInputBancaInicial() {
+            // Se a banca inicial for 0, mostra o input dentro do card de sessão. Se não, esconde.
+            if (state.bancaInicial <= 0) {
+                document.getElementById('blockBancaInicial').classList.remove('hidden');
             } else {
-                aviso.classList.remove('hidden');
-                btns.forEach(b => b.disabled = true);
+                document.getElementById('blockBancaInicial').classList.add('hidden');
             }
         }
 
-        function maskCurrency(i) {
-            let v = i.value.replace(/\D/g, "");
-            v = (v / 100).toFixed(2) + "";
-            v = v.replace(".", ",");
-            v = v.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-            i.value = v;
+        function checkSessionName() {
+            const nome = document.getElementById('sessionNameInput').value;
+            
+            // Se a banca ainda for zero, tenta pegar do input
+            if (state.bancaInicial === 0) {
+                const valInput = parseMoney(document.getElementById('inputBancaInicial').value);
+                if (valInput > 0) {
+                    state.bancaInicial = valInput;
+                    state.bancaAtual = valInput;
+                    verificarInputBancaInicial();
+                    calcularStake();
+                    saveData();
+                } else {
+                    // Se continua zero e o nome está preenchido, talvez o user esqueceu da banca
+                    // Mas a regra principal aqui é o NOME.
+                }
+            }
+
+            if (!nome || nome.trim() === '') {
+                alert("Informe o nome do dia/sessão para iniciar.");
+                document.getElementById('sessionNameInput').focus();
+                document.getElementById('sessionNameInput').classList.add('error-border');
+                return false;
+            }
+            document.getElementById('sessionNameInput').classList.remove('error-border');
+            
+            // Verificação secundária: Banca > 0 para operar
+            if (state.bancaInicial <= 0) {
+                alert("Defina um valor para a Banca Inicial no campo disponível.");
+                document.getElementById('inputBancaInicial').focus();
+                return false;
+            }
+
+            return true;
         }
 
-        function parseMoney(s) {
-            return parseFloat(s.replace(/\./g, "").replace(",", ".")) || 0;
-        }
-
-        function formatMoney(v) {
-            return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        }
-
-        function calcularStake() {
-            const p = parseFloat(document.getElementById('selectStakePercent').value);
-            const stake = state.bancaInicial * p;
-            document.getElementById('displayStakeVal').innerText = formatMoney(stake);
-        }
+        // --- START PAGE LOGIC ---
 
         function registrarGreenStart() {
+            if (!checkSessionName()) return;
+
             const val = parseMoney(document.getElementById('inputGreenStart').value);
-            if (val <= 0) return;
+            if (!val) return;
             state.bancaAtual += val;
-            save();
+            state.greensCountDia++; 
             document.getElementById('inputGreenStart').value = '';
+            saveData();
+            alert("Green registrado!");
         }
 
         function registrarRedStart() {
+            if (!checkSessionName()) return;
+
             const val = parseMoney(document.getElementById('inputRedStart').value);
-            if (val <= 0) return;
+            if (!val) return;
             state.bancaAtual -= val;
-            save();
+            state.redsCountDia++; 
             document.getElementById('inputRedStart').value = '';
+            document.getElementById('pageStart').classList.add('hidden');
+            document.getElementById('pageCiclo2').classList.remove('hidden');
+            saveData();
         }
 
-        function save() {
-            localStorage.setItem(APP_KEY, JSON.stringify(state));
-            updateUI();
+        function calcularStake() {
+            const percent = parseFloat(document.getElementById('selectStakePercent').value);
+            // Se banca 0, tenta ler do input
+            let base = state.bancaInicial;
+            if (base === 0) base = parseMoney(document.getElementById('inputBancaInicial').value);
+
+            state.stakeValor = base * percent;
+            document.getElementById('displayStakeVal').innerText = formatMoney(state.stakeValor);
+            document.getElementById('recOddLow').innerText = formatMoney(state.stakeValor * 0.30);
+            document.getElementById('recOddMid').innerText = formatMoney(state.stakeValor * 0.20);
+            document.getElementById('recOddHigh').innerText = formatMoney(state.stakeValor * 0.10);
+        }
+        
+        // Modal de Ajuste de Banca (Header)
+        function salvarAjusteBanca() {
+            const val = parseMoney(document.getElementById('inputEditBanca').value);
+            if (val > 0) {
+                state.bancaInicial = val;
+                // Se for a primeira vez, iguala a atual
+                if (state.bancaAtual === 0) state.bancaAtual = val;
+                saveData();
+                toggleModal('modalEditBanca');
+                verificarInputBancaInicial();
+                calcularStake();
+                location.reload();
+            }
         }
 
-        function updateUI() {
-            document.getElementById('topoBancaInicial').innerText = formatMoney(state.bancaInicial);
-            document.getElementById('topoBancaAtual').innerText = formatMoney(state.bancaAtual);
+
+        // --- GLOBAL: FINALIZAR DIA ---
+        function abrirModalFinalizar() {
+            if (!checkSessionName()) return;
+            document.getElementById('modalFinalBanca').innerText = formatMoney(state.bancaAtual);
+            toggleModal('modalFinalizar');
         }
 
-        function toggleModal(id) {
-            document.getElementById(id).classList.toggle('hidden');
+        function executarFinalizarDia() {
+            if (!checkSessionName()) return;
+            
+            const nome = state.sessionName;
+            const resultado = state.bancaAtual - state.bancaInicial;
+            
+            if (state.bancaInicial > 0) {
+                state.historico.unshift({ 
+                    data: new Date().toLocaleString('pt-BR'), 
+                    nome, 
+                    resultado, 
+                    bancaFinal: state.bancaAtual 
+                });
+                if(state.historico.length > 7) state.historico.pop();
+            }
+
+            // Resetar
+            state.sessionName = ''; // Limpa nome
+            state.bancaInicial = 0;
+            state.bancaAtual = 0;
+            state.stakeValor = 0;
+            state.greensCountDia = 0; 
+            state.redsCountDia = 0; 
+            resetCiclo2State(); 
+            resetCicloFinalState();
+            
+            saveData();
+            alert("Dia finalizado com sucesso!");
+            location.reload(); 
         }
 
-        window.onload = () => {
-            const saved = localStorage.getItem(APP_KEY);
-            if(saved) state = JSON.parse(saved);
-            document.getElementById('sessionName').value = state.sessionName || '';
-            validarSessao();
-            updateUI();
+        // --- CICLO 2 ---
+        function resetCiclo2State() {
+            state.ciclo2.ativo = false;
+            state.ciclo2.totalAlocado = 0;
+            state.ciclo2.metaVal = 0;
+            state.ciclo2.limiteVal = 0;
+            state.ciclo2.somaGreens = 0;
+            state.ciclo2.somaReds = 0;
+            state.ciclo2.resultadoLiquido = 0;
+            state.ciclo2.cardsUsados = 0;
+            
+            document.getElementById('c2Dashboard').classList.add('hidden');
+            document.getElementById('configCiclo2').classList.remove('hidden');
+            document.getElementById('areaCardsCiclo2').innerHTML = '';
+            document.getElementById('alertaMetaCiclo2').classList.add('hidden');
+            document.getElementById('alertaLimiteCiclo2').classList.add('hidden');
+            document.getElementById('btnIrCicloFinal').classList.add('hidden');
+        }
+
+        function iniciarCiclo2() {
+            if (!checkSessionName()) return;
+
+            const qtd = parseInt(document.getElementById('c2Qtd').value);
+            const perfil = parseFloat(document.getElementById('c2Perfil').value);
+            
+            state.ciclo2.configQtd = qtd;
+            state.ciclo2.configPerfil = perfil;
+
+            const valorPorCard = state.stakeValor * perfil;
+            state.ciclo2.totalAlocado = qtd * valorPorCard;
+            state.ciclo2.metaVal = state.ciclo2.totalAlocado * 0.05; 
+            state.ciclo2.limiteVal = state.ciclo2.totalAlocado * 0.15; 
+
+            state.ciclo2.somaGreens = 0;
+            state.ciclo2.somaReds = 0;
+            state.ciclo2.resultadoLiquido = 0;
+            state.ciclo2.cardsUsados = 0;
+            state.ciclo2.ativo = true;
+
+            saveData();
+            renderizarCiclo2Ativo();
+        }
+        function aplicarResultadoC2(index) {
+            if (!checkSessionName()) return;
+
+            const gVal = parseMoney(document.getElementById(`c2-green-${index}`).value);
+            const rVal = parseMoney(document.getElementById(`c2-red-${index}`).value);
+            
+            if (gVal === 0 && rVal === 0) return;
+            if (document.getElementById(`c2-actions-${index}`).classList.contains('hidden')) return;
+
+            if (gVal > 0) {
+                state.bancaAtual += gVal;
+                state.ciclo2.somaGreens += gVal;
+                state.greensCountDia++; 
+                document.getElementById(`c2-msg-${index}`).innerHTML = `<span class="text-green">✅ Green: ${formatMoney(gVal)}</span>`;
+            } else {
+                state.bancaAtual -= rVal;
+                state.ciclo2.somaReds += rVal;
+                state.redsCountDia++; 
+                document.getElementById(`c2-msg-${index}`).innerHTML = `<span class="text-red">❌ Red: ${formatMoney(rVal)}</span>`;
+            }
+
+            state.ciclo2.resultadoLiquido = state.ciclo2.somaGreens - state.ciclo2.somaReds;
+            state.ciclo2.cardsUsados++;
+
+            document.getElementById(`c2-actions-${index}`).classList.add('hidden');
+            document.getElementById(`c2-msg-${index}`).classList.remove('hidden');
+
+            saveData();
+            atualizarResultadoVisualC2();
+            verificarRegrasCiclo2(true); 
+        }
+
+        function renderizarCiclo2Ativo() {
+            document.getElementById('configCiclo2').classList.add('hidden');
+            document.getElementById('c2Dashboard').classList.remove('hidden');
+            document.getElementById('areaCardsCiclo2').innerHTML = '';
+            
+            document.getElementById('c2DisplayTotal').innerText = formatMoney(state.ciclo2.totalAlocado);
+            document.getElementById('c2DisplayMeta').innerText = formatMoney(state.ciclo2.metaVal);
+            document.getElementById('c2DisplayLimite').innerText = formatMoney(state.ciclo2.limiteVal);
+            atualizarResultadoVisualC2();
+
+            verificarRegrasCiclo2(false); 
+
+            const container = document.getElementById('areaCardsCiclo2');
+            const valorEntrada = (state.ciclo2.totalAlocado / state.ciclo2.configQtd); 
+            const textoRedMax = formatMoney(valorEntrada * 0.30); 
+
+            for (let i = 1; i <= state.ciclo2.configQtd; i++) {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `
+                    <h4>Entrada ${i}</h4>
+                    <div class="entry-row"><span>Valor Entrada:</span> <strong>${formatMoney(valorEntrada)}</strong></div>
+                    <div class="text-red" style="font-size: 0.8rem; margin-bottom:10px;">Red máx sugerido: ${textoRedMax}</div>
+                    
+                    <div id="c2-actions-${i}">
+                        <input type="text" id="c2-green-${i}" placeholder="Green (R$)" class="c2-inp" oninput="maskCurrency(this)">
+                        <input type="text" id="c2-red-${i}" placeholder="Red (R$)" class="c2-inp" oninput="maskCurrency(this)">
+                        <button class="btn btn-primary" onclick="aplicarResultadoC2(${i})">Aplicar Resultado</button>
+                    </div>
+                    <div id="c2-msg-${i}" class="hidden" style="font-weight:bold; margin-top:5px;"></div>
+                `;
+                container.appendChild(div);
+            }
+        }
+        function atualizarResultadoVisualC2() {
+            const liq = state.ciclo2.resultadoLiquido;
+            const total = state.ciclo2.totalAlocado;
+            const perc = total > 0 ? (liq / total * 100).toFixed(2) : 0;
+            
+            const el = document.getElementById('c2DisplayResultado');
+            el.innerText = `${formatMoney(liq)} (${perc}%)`;
+            el.className = liq >= 0 ? 'text-green dash-val' : 'text-red dash-val';
+        }
+
+        function verificarRegrasCiclo2(executarAcoes) {
+            const liq = state.ciclo2.resultadoLiquido;
+            const meta = state.ciclo2.metaVal;
+            const limite = state.ciclo2.limiteVal; 
+
+            document.getElementById('alertaMetaCiclo2').classList.add('hidden');
+            document.getElementById('alertaLimiteCiclo2').classList.add('hidden');
+            document.getElementById('btnIrCicloFinal').classList.add('hidden');
+
+            if (liq <= (limite * -1)) {
+                document.getElementById('alertaLimiteCiclo2').classList.remove('hidden');
+                document.getElementById('btnIrCicloFinal').classList.remove('hidden');
+            }
+
+            if (liq >= meta) {
+                document.getElementById('alertaMetaCiclo2').classList.remove('hidden');
+                if (executarAcoes) {
+                    setTimeout(() => {
+                        alert("Meta do Ciclo 2 atingida! Voltando ao START.");
+                        resetCiclo2State(); 
+                        document.getElementById('pageStart').classList.remove('hidden');
+                        document.getElementById('pageCiclo2').classList.add('hidden');
+                        saveData();
+                    }, 2000);
+                }
+                return;
+            }
+
+            if (executarAcoes && state.ciclo2.cardsUsados >= state.ciclo2.configQtd) {
+                document.getElementById('msgReincioCiclo2').classList.remove('hidden');
+                setTimeout(() => {
+                    document.getElementById('msgReincioCiclo2').classList.add('hidden');
+                    iniciarCiclo2(); 
+                }, 2500);
+            }
+        }
+
+        function irParaCicloFinal() {
+            if (!checkSessionName()) return;
+            document.getElementById('pageCiclo2').classList.add('hidden');
+            document.getElementById('pageCicloFinal').classList.remove('hidden');
+            state.cicloFinal.ativo = true;
+            resetCicloFinalState();
+            saveData();
+        }
+
+        // --- CICLO FINAL ---
+        function resetCicloFinalState() {
+            state.cicloFinal.ativo = false;
+            state.cicloFinal.cardsUsados = 0;
+            state.cicloFinal.greensCount = 0;
+        }
+
+        function reiniciarCicloFinal() {
+            if (!checkSessionName()) return;
+            alert("Redirecionando para o START com a banca atual.");
+            resetCiclo2State(); 
+            resetCicloFinalState();
+            
+            document.getElementById('pageCicloFinal').classList.add('hidden');
+            document.getElementById('pageStart').classList.remove('hidden');
+            
             calcularStake();
-        };
+            saveData();
+        }
+
+        function gerarCardsCicloFinal() {
+            if (!checkSessionName()) return;
+            if (state.cicloFinal.ativo && state.cicloFinal.cardsUsados > 0) return;
+
+            const perfil = parseFloat(document.getElementById('cfPerfil').value);
+            const valEntrada = state.stakeValor * perfil; 
+            const valRedMax = valEntrada * 0.30; 
+
+            state.cicloFinal.greensCount = 0;
+            state.cicloFinal.cardsUsados = 0;
+            state.cicloFinal.totalCards = 2;
+
+            const container = document.getElementById('areaCardsCicloFinal');
+            container.innerHTML = '';
+            document.getElementById('configCicloFinal').classList.add('hidden');
+            document.getElementById('msgEncerramentoFinal').classList.add('hidden'); 
+            document.getElementById('msgSucessoFinal').classList.add('hidden'); 
+            document.getElementById('btnConcluidoFinal').classList.add('hidden');
+            
+            for (let i = 1; i <= state.cicloFinal.totalCards; i++) {
+                const div = document.createElement('div');
+                div.className = 'card';
+                div.innerHTML = `
+                    <h4>Recuperação ${i}</h4>
+                    <div class="entry-row"><span>Valor Entrada:</span> <strong>${formatMoney(valEntrada)}</strong></div>
+                    <div class="text-red" style="font-size: 0.8rem; margin-bottom:10px;">Red máx recomendado (30%): ${formatMoney(valRedMax)}</div>
+                    
+                    <div id="cf-actions-${i}">
+                        <input type="text" id="cf-green-${i}" placeholder="Green (R$)" oninput="maskCurrency(this)">
+                        <input type="text" id="cf-red-${i}" placeholder="Red (R$)" oninput="maskCurrency(this)">
+                        <button class="btn btn-primary" onclick="aplicarResultadoCF(${i})">Aplicar</button>
+                    </div>
+                    <div id="cf-msg-${i}" class="hidden" style="font-weight:bold; margin-top:5px;"></div>
+                `;
+                container.appendChild(div);
+            }
+            saveData();
+        }
+
+        function aplicarResultadoCF(index) {
+            if (!checkSessionName()) return;
+            const gVal = parseMoney(document.getElementById(`cf-green-${index}`).value);
+            const rVal = parseMoney(document.getElementById(`cf-red-${index}`).value);
+            const msgDiv = document.getElementById(`cf-msg-${index}`);
+            
+            if (document.getElementById(`cf-actions-${index}`).classList.contains('hidden')) return;
+
+            if (gVal > 0) {
+                state.bancaAtual += gVal;
+                state.cicloFinal.greensCount++;
+                state.greensCountDia++; 
+                msgDiv.innerHTML = `<span class="text-green">✅ Green: ${formatMoney(gVal)}</span>`;
+            } else if (rVal > 0) {
+                state.bancaAtual -= rVal;
+                state.redsCountDia++; 
+                msgDiv.innerHTML = `<span class="text-red">❌ Red: ${formatMoney(rVal)}</span>`;
+            } else return;
+
+            state.cicloFinal.cardsUsados++;
+
+            document.getElementById(`cf-actions-${index}`).classList.add('hidden');
+            msgDiv.classList.remove('hidden');
+            saveData();
+
+            verificarEncerramentoCicloFinal(); 
+        }
+
+        function verificarEncerramentoCicloFinal() {
+            if (state.cicloFinal.cardsUsados >= state.cicloFinal.totalCards) {
+                document.getElementById('configCicloFinal').classList.add('hidden'); 
+                
+                if (state.cicloFinal.greensCount >= 2) {
+                    document.getElementById('msgSucessoFinal').classList.remove('hidden');
+                    document.getElementById('btnConcluidoFinal').classList.remove('hidden');
+                    document.getElementById('msgEncerramentoFinal').classList.add('hidden');
+                } else {
+                    document.getElementById('msgEncerramentoFinal').classList.remove('hidden');
+                    document.getElementById('msgSucessoFinal').classList.add('hidden');
+                    document.getElementById('btnConcluidoFinal').classList.add('hidden');
+                }
+            }
+        }
+
+        function voltarParaCiclo2() {
+            if (!checkSessionName()) return;
+            document.getElementById('pageCicloFinal').classList.add('hidden');
+            document.getElementById('pageCiclo2').classList.remove('hidden');
+            
+            document.getElementById('configCicloFinal').classList.remove('hidden');
+            document.getElementById('areaCardsCicloFinal').innerHTML = '';
+            document.getElementById('msgSucessoFinal').classList.add('hidden');
+            document.getElementById('btnConcluidoFinal').classList.add('hidden');
+            document.getElementById('msgEncerramentoFinal').classList.add('hidden');
+            
+            resetCiclo2State();
+            resetCicloFinalState();
+            saveData();
+        }
+
+        // --- RESUMO ---
+        function renderResumo() {
+            const titleElement = document.getElementById('resumoTitulo');
+            titleElement.innerHTML = `📊 Resumo ${state.sessionName ? '— "' + state.sessionName + '"' : ''}`;
+
+            document.getElementById('resumoBancaIni').innerText = formatMoney(state.bancaInicial);
+            document.getElementById('resumoBancaAtual').innerText = formatMoney(state.bancaAtual);
+            
+            const diff = state.bancaAtual - state.bancaInicial;
+            const perc = state.bancaInicial > 0 ? ((diff/state.bancaInicial)*100).toFixed(2) : 0;
+            const elRes = document.getElementById('resumoResultado');
+            elRes.innerText = `${formatMoney(diff)} (${perc}%)`;
+            elRes.className = diff >= 0 ? 'text-green' : 'text-red';
+            
+            document.getElementById('resumoGreens').innerText = state.greensCountDia;
+            document.getElementById('resumoReds').innerText = state.redsCountDia;
+            
+            const list = document.getElementById('listaHistorico');
+            list.innerHTML = '';
+            state.historico.forEach(h => {
+                const div = document.createElement('div');
+                div.className = 'history-item';
+                div.innerHTML = `<div><b>${h.nome}</b><br><small>${h.data}</small></div><div class="${h.resultado >= 0 ? 'text-green' : 'text-red'}"><b>${formatMoney(h.resultado)}</b></div>`;
+                list.appendChild(div);
+            });
+        }
+
+        window.onload = loadData;
     </script>
 </body>
 </html>
