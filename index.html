@@ -36,9 +36,14 @@
         .btn-primary { background-color: var(--primary); color: white; }
         .btn-outline { background-color: transparent; border: 1px solid var(--text-color); color: var(--text-color); }
         
-        input, select { width: 100%; padding: 12px; margin: 5px 0; background: #2c2c2c; border: 1px solid #444; color: white; border-radius: var(--border-radius); font-size: 1rem; }
-        input:disabled { background: #1a1a1a; color: #777; border-color: #333; }
+        input[type="text"], input[type="number"], select { width: 100%; padding: 12px; margin: 5px 0; background: #2c2c2c; border: 1px solid #444; color: white; border-radius: var(--border-radius); font-size: 1rem; }
+        input:disabled { background: #1a1a1a; color: #777; border-color: #333; opacity: 0.7; }
         input.error-border { border-color: var(--red); }
+
+        /* Checkbox Customization */
+        .checkbox-wrapper { display: flex; align-items: center; gap: 10px; margin-top: 12px; padding: 10px; background: rgba(0,0,0,0.2); border-radius: var(--border-radius); border: 1px solid #333; }
+        .checkbox-wrapper input[type="checkbox"] { width: 20px; height: 20px; margin: 0; cursor: pointer; accent-color: var(--primary); }
+        .checkbox-wrapper label { cursor: pointer; font-size: 0.9rem; color: #ccc; }
 
         /* Topo Fixo */
         header { position: sticky; top: 0; background: #1a1a1a; padding: 15px; border-bottom: 2px solid #333; z-index: 100; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
@@ -81,6 +86,15 @@
             text-align: center;
             font-size: 0.8rem;
             color: rgba(224, 224, 224, 0.65);
+        }
+        #footer a {
+            color: rgba(224, 224, 224, 0.65);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        #footer a:hover {
+            color: #fff;
+            text-decoration: underline;
         }
 
     </style>
@@ -155,6 +169,11 @@
                 <label>Nome do dia/sessão <span class="text-red">*</span></label>
                 <input type="text" id="sessionNameInput" placeholder="Ex: Dom 15/12" oninput="validarInputNome(this)">
                 
+                <div class="checkbox-wrapper">
+                    <input type="checkbox" id="chkCommission" onchange="toggleCommission()" checked>
+                    <label for="chkCommission">Aplicar comissão nos Greens (3,9%)</label>
+                </div>
+
                 <div id="blockBancaInicial" class="hidden mt-10" style="border-top: 1px solid #333; padding-top: 10px;">
                     <label>Banca Inicial (R$)</label>
                     <input type="text" id="inputBancaInicial" placeholder="0,00" oninput="maskCurrency(this)">
@@ -319,16 +338,17 @@
         </section>
         
         <div id="footer">
-            Desenvolvido por Evoket Studio
+            <a href="https://evoketstudio.com.br/" target="_blank" rel="noopener noreferrer">Desenvolvido por Evoket Studios</a>
         </div>
 
     </div>
 
     <script>
         // --- ESTADO GLOBAL ---
-        const APP_KEY = 'metodoGolsApp_v7_sessao';
+        const APP_KEY = 'metodoGolsApp_v8_comissao';
         let state = {
-            sessionName: '', // Novo campo obrigatório
+            sessionName: '', 
+            commissionEnabled: true, // Padrão ligado
             bancaInicial: 0,
             bancaAtual: 0,
             stakeValor: 0, 
@@ -377,6 +397,20 @@
             if(id === 'modalResumo') renderResumo();
         }
 
+        // --- COMISSÃO ---
+        function toggleCommission() {
+            state.commissionEnabled = document.getElementById('chkCommission').checked;
+            saveData();
+        }
+
+        function applyCommission(greenValue) {
+            if (state.commissionEnabled) {
+                // Desconto de 3.9%
+                return greenValue * (1 - 0.039); // Multiplica por 0.961
+            }
+            return greenValue;
+        }
+
         // --- SALVAMENTO/CARREGAMENTO ---
         function saveData() {
             localStorage.setItem(APP_KEY, JSON.stringify(state));
@@ -390,17 +424,22 @@
                 
                 // Migração segura
                 if (typeof state.sessionName === 'undefined') state.sessionName = '';
+                if (typeof state.commissionEnabled === 'undefined') state.commissionEnabled = true;
                 if (typeof state.greensCountDia === 'undefined') state.greensCountDia = 0;
                 if (typeof state.redsCountDia === 'undefined') state.redsCountDia = 0;
                 
-                // Preenche o nome da sessão se existir
+                // Preenche UI baseada no estado
+                document.getElementById('sessionNameInput').value = state.sessionName;
+                document.getElementById('chkCommission').checked = state.commissionEnabled;
+
+                // Bloqueia input se já houver nome definido (sessão em andamento)
                 if (state.sessionName) {
-                    document.getElementById('sessionNameInput').value = state.sessionName;
+                    document.getElementById('sessionNameInput').disabled = true;
                 }
 
                 // Renderiza estado
                 if (state.bancaInicial > 0) {
-                    calcularStake(); // Recalcula visual da stake
+                    calcularStake(); 
                     
                     if (state.ciclo2.ativo) {
                         document.getElementById('pageStart').classList.add('hidden');
@@ -419,7 +458,6 @@
                 }
             }
             
-            // Controle visual do input de banca (aparece só se banca for 0)
             verificarInputBancaInicial();
             updateHeader();
         }
@@ -431,11 +469,10 @@
             elAtual.style.color = state.bancaAtual >= state.bancaInicial ? 'var(--green)' : 'var(--red)';
         }
 
-        // --- VALIDAÇÃO DE SESSÃO (REGRA PRINCIPAL) ---
+        // --- VALIDAÇÃO DE SESSÃO ---
         function validarInputNome(input) {
             state.sessionName = input.value;
-            // Se o usuário digitou nome e banca era 0, talvez ele esteja setando agora
-            // Salva input da banca se estiver visível
+            // Salva input da banca se estiver visível e sendo editado agora
             const inputBanca = document.getElementById('inputBancaInicial');
             if (!document.getElementById('blockBancaInicial').classList.contains('hidden') && inputBanca.value) {
                 const val = parseMoney(inputBanca.value);
@@ -448,7 +485,6 @@
         }
         
         function verificarInputBancaInicial() {
-            // Se a banca inicial for 0, mostra o input dentro do card de sessão. Se não, esconde.
             if (state.bancaInicial <= 0) {
                 document.getElementById('blockBancaInicial').classList.remove('hidden');
             } else {
@@ -459,7 +495,6 @@
         function checkSessionName() {
             const nome = document.getElementById('sessionNameInput').value;
             
-            // Se a banca ainda for zero, tenta pegar do input
             if (state.bancaInicial === 0) {
                 const valInput = parseMoney(document.getElementById('inputBancaInicial').value);
                 if (valInput > 0) {
@@ -468,9 +503,6 @@
                     verificarInputBancaInicial();
                     calcularStake();
                     saveData();
-                } else {
-                    // Se continua zero e o nome está preenchido, talvez o user esqueceu da banca
-                    // Mas a regra principal aqui é o NOME.
                 }
             }
 
@@ -482,7 +514,9 @@
             }
             document.getElementById('sessionNameInput').classList.remove('error-border');
             
-            // Verificação secundária: Banca > 0 para operar
+            // Regra: Uma vez confirmado o uso, bloqueia o input
+            document.getElementById('sessionNameInput').disabled = true;
+
             if (state.bancaInicial <= 0) {
                 alert("Defina um valor para a Banca Inicial no campo disponível.");
                 document.getElementById('inputBancaInicial').focus();
@@ -497,13 +531,20 @@
         function registrarGreenStart() {
             if (!checkSessionName()) return;
 
-            const val = parseMoney(document.getElementById('inputGreenStart').value);
-            if (!val) return;
-            state.bancaAtual += val;
+            const valRaw = parseMoney(document.getElementById('inputGreenStart').value);
+            if (!valRaw) return;
+
+            // Aplica comissão se ligado
+            const valLiquido = applyCommission(valRaw);
+
+            state.bancaAtual += valLiquido;
             state.greensCountDia++; 
             document.getElementById('inputGreenStart').value = '';
             saveData();
-            alert("Green registrado!");
+            
+            let msg = "Green registrado!";
+            if (state.commissionEnabled) msg += ` (Líquido: ${formatMoney(valLiquido)})`;
+            alert(msg);
         }
 
         function registrarRedStart() {
@@ -511,7 +552,7 @@
 
             const val = parseMoney(document.getElementById('inputRedStart').value);
             if (!val) return;
-            state.bancaAtual -= val;
+            state.bancaAtual -= val; // Red nunca tem comissão
             state.redsCountDia++; 
             document.getElementById('inputRedStart').value = '';
             document.getElementById('pageStart').classList.add('hidden');
@@ -521,7 +562,6 @@
 
         function calcularStake() {
             const percent = parseFloat(document.getElementById('selectStakePercent').value);
-            // Se banca 0, tenta ler do input
             let base = state.bancaInicial;
             if (base === 0) base = parseMoney(document.getElementById('inputBancaInicial').value);
 
@@ -532,12 +572,10 @@
             document.getElementById('recOddHigh').innerText = formatMoney(state.stakeValor * 0.10);
         }
         
-        // Modal de Ajuste de Banca (Header)
         function salvarAjusteBanca() {
             const val = parseMoney(document.getElementById('inputEditBanca').value);
             if (val > 0) {
                 state.bancaInicial = val;
-                // Se for a primeira vez, iguala a atual
                 if (state.bancaAtual === 0) state.bancaAtual = val;
                 saveData();
                 toggleModal('modalEditBanca');
@@ -572,7 +610,7 @@
             }
 
             // Resetar
-            state.sessionName = ''; // Limpa nome
+            state.sessionName = ''; 
             state.bancaInicial = 0;
             state.bancaAtual = 0;
             state.stakeValor = 0;
@@ -631,17 +669,20 @@
         function aplicarResultadoC2(index) {
             if (!checkSessionName()) return;
 
-            const gVal = parseMoney(document.getElementById(`c2-green-${index}`).value);
+            const gValRaw = parseMoney(document.getElementById(`c2-green-${index}`).value);
             const rVal = parseMoney(document.getElementById(`c2-red-${index}`).value);
             
-            if (gVal === 0 && rVal === 0) return;
+            if (gValRaw === 0 && rVal === 0) return;
             if (document.getElementById(`c2-actions-${index}`).classList.contains('hidden')) return;
 
-            if (gVal > 0) {
-                state.bancaAtual += gVal;
-                state.ciclo2.somaGreens += gVal;
+            if (gValRaw > 0) {
+                // Aplica comissão se ligado
+                const gValLiq = applyCommission(gValRaw);
+
+                state.bancaAtual += gValLiq;
+                state.ciclo2.somaGreens += gValLiq;
                 state.greensCountDia++; 
-                document.getElementById(`c2-msg-${index}`).innerHTML = `<span class="text-green">✅ Green: ${formatMoney(gVal)}</span>`;
+                document.getElementById(`c2-msg-${index}`).innerHTML = `<span class="text-green">✅ Green: ${formatMoney(gValLiq)}</span>`;
             } else {
                 state.bancaAtual -= rVal;
                 state.ciclo2.somaReds += rVal;
@@ -811,17 +852,20 @@
 
         function aplicarResultadoCF(index) {
             if (!checkSessionName()) return;
-            const gVal = parseMoney(document.getElementById(`cf-green-${index}`).value);
+            const gValRaw = parseMoney(document.getElementById(`cf-green-${index}`).value);
             const rVal = parseMoney(document.getElementById(`cf-red-${index}`).value);
             const msgDiv = document.getElementById(`cf-msg-${index}`);
             
             if (document.getElementById(`cf-actions-${index}`).classList.contains('hidden')) return;
 
-            if (gVal > 0) {
-                state.bancaAtual += gVal;
+            if (gValRaw > 0) {
+                // Aplica comissão se ligado
+                const gValLiq = applyCommission(gValRaw);
+
+                state.bancaAtual += gValLiq;
                 state.cicloFinal.greensCount++;
                 state.greensCountDia++; 
-                msgDiv.innerHTML = `<span class="text-green">✅ Green: ${formatMoney(gVal)}</span>`;
+                msgDiv.innerHTML = `<span class="text-green">✅ Green: ${formatMoney(gValLiq)}</span>`;
             } else if (rVal > 0) {
                 state.bancaAtual -= rVal;
                 state.redsCountDia++; 
