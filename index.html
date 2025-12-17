@@ -49,29 +49,16 @@
         .card { background: var(--card-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 15px; border: 1px solid #333; }
         
         .section-title { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; color: var(--yellow); }
-        .info-icon { background: #444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; cursor: pointer; }
-        .tooltip-box { background: #333; padding: 10px; border-radius: var(--border-radius); font-size: 0.9rem; margin-bottom: 15px; border-left: 3px solid var(--yellow); }
-
-        /* Dashboard Ciclo 2 */
-        .dashboard-c2 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px; text-align: center; }
-        .dash-item { background: #252525; padding: 8px; border-radius: 5px; border: 1px solid #333; }
-        .dash-label { font-size: 0.7rem; color: #888; display: block; }
-        .dash-val { font-size: 0.9rem; font-weight: bold; }
 
         /* Modal */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; display: flex; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: var(--card-bg); padding: 20px; border-radius: var(--border-radius); width: 100%; max-width: 500px; max-height: 80vh; overflow-y: auto; text-align: center; }
         
         .entry-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 0.9rem; }
-        .warning-box { background: rgba(255, 165, 0, 0.2); border: 1px solid orange; color: #ffebcc; padding: 12px; border-radius: var(--border-radius); margin: 10px 0; text-align: center; }
         
         /* Rodapé */
         #footer { margin-top: 40px; padding: 10px 0; text-align: center; font-size: 0.8rem; }
-        #footer a { color: rgba(224, 224, 224, 0.65); text-decoration: none; transition: color 0.2s; }
-        #footer a:hover { color: rgba(224, 224, 224, 0.9); text-decoration: underline; }
-
-        .checkbox-container { display: flex; align-items: center; gap: 10px; cursor: pointer; }
-        .checkbox-container input { width: auto; }
+        #footer a { color: rgba(224, 224, 224, 0.65); text-decoration: none; }
     </style>
 </head>
 <body>
@@ -86,20 +73,6 @@
         </div>
     </div>
 
-    <div id="modalFinalizar" class="modal hidden">
-        <div class="modal-content">
-            <h3 style="margin-bottom: 15px;">🗓 Finalizar Dia</h3>
-            <p>Deseja encerrar o dia/sessão com os valores atuais da banca?</p>
-            <div class="card" style="margin: 15px 0; text-align: left;">
-                <div class="entry-row"><span>Banca Final:</span> <span id="modalFinalBanca" style="font-weight: bold;">R$ 0,00</span></div>
-            </div>
-            <div class="flex">
-                <button class="btn btn-primary" onclick="executarFinalizarDia()">✅ SIM – Finalizar Dia</button>
-                <button class="btn btn-red" onclick="toggleModal('modalFinalizar')">❌ NÃO – Voltar</button>
-            </div>
-        </div>
-    </div>
-
     <header>
         <div class="header-info">
             <h4>BANCA INICIAL</h4>
@@ -110,7 +83,6 @@
             <span id="topoBancaAtual" style="font-weight: bold;">R$ 0,00</span>
         </div>
         <div class="header-actions">
-            <button class="btn-icon" title="Finalizar Dia" onclick="abrirModalFinalizar()">🗓</button>
             <button class="btn-icon" title="Resumo" onclick="toggleModal('modalResumo')">📊</button>
         </div>
     </header>
@@ -124,27 +96,16 @@
 
             <div class="card">
                 <h3>1️⃣ Nome do Dia/Sessão</h3>
-                <input type="text" id="sessionName" placeholder="Ex: Dom 15/12 ou Sessão Tarde" oninput="validarSessao()">
+                <input type="text" id="sessionName" placeholder="Ex: Dom 15/12" oninput="validarSessao()">
                 <p id="msgAvisoNome" class="text-yellow" style="font-size: 0.8rem; margin-top: 5px;">
-                    ⚠️ Informe o nome do dia/sessão para iniciar as operações.
+                    ⚠️ Informe o nome do dia/sessão para iniciar.
                 </p>
             </div>
 
-            <div id="configDia" class="card">
-                <h3>2️⃣ Configuração da Banca</h3>
-                <div id="blocoDefinirBanca">
-                    <label>Definir Banca Inicial (R$):</label>
-                    <input type="text" id="inputBancaManual" placeholder="Ex: 500,00" oninput="maskCurrency(this)">
-                    <button id="btnSetBanca" class="btn btn-primary" onclick="definirBancaIncial()">Definir e Iniciar</button>
-                </div>
-                
-                <div id="blocoAjustes" class="hidden">
-                    <div class="checkbox-container" style="margin-top: 10px;">
-                        <input type="checkbox" id="commissionToggle" onchange="toggleComissao()" checked>
-                        <label for="commissionToggle">Aplicar comissão nos Greens (3,9%)</label>
-                    </div>
-
-                    <label style="margin-top: 15px; display: block;">Perfil de Stake:</label>
+            <div id="areaOperacoesStart">
+                <div class="card">
+                    <h3>2️⃣ Definição da Stake</h3>
+                    <label>Perfil de Stake:</label>
                     <select id="selectStakePercent" onchange="calcularStake()">
                         <option value="0.05">5% - Conservador</option>
                         <option value="0.10" selected>10% - Recomendado</option>
@@ -153,18 +114,6 @@
                     <div style="margin-top: 10px; font-weight: bold;">
                         Stake: <span id="displayStakeVal" class="text-green">R$ 0,00</span>
                     </div>
-                </div>
-            </div>
-
-            <div id="operacoesStart" class="hidden">
-                <div class="card">
-                    <div class="section-title">
-                        <h3>3️⃣ Entradas Recomendadas</h3>
-                        <div class="info-icon" onclick="toggleTooltip('ttStart')">?</div>
-                    </div>
-                    <div id="ttStart" class="tooltip-box hidden">Foco em odds baixas para consistência inicial.</div>
-                    <div class="entry-row"><span>Odd até 1.05 (30%):</span> <span id="recOddLow">R$ 0,00</span></div>
-                    <div class="entry-row"><span>Odd até 1.10 (20%):</span> <span id="recOddMid">R$ 0,00</span></div>
                 </div>
 
                 <div class="card" style="border-color: var(--green);">
@@ -181,58 +130,8 @@
             </div>
         </section>
 
-        <section id="pageCiclo2" class="hidden">
-            <div class="section-title">
-                <h2>🟨 CICLO 2 (Busca de Lucro)</h2>
-            </div>
-            
-            <div id="c2Dashboard" class="card hidden">
-                <div class="dashboard-c2">
-                    <div class="dash-item">
-                        <span class="dash-label">Alocado</span>
-                        <span id="c2DisplayTotal" class="dash-val">R$ 0,00</span>
-                    </div>
-                    <div class="dash-item"><span class="dash-label">Meta</span><span id="c2DisplayMeta" class="dash-val text-green">R$ 0,00</span></div>
-                    <div class="dash-item"><span class="dash-label">Limite</span><span id="c2DisplayLimite" class="dash-val text-red">R$ 0,00</span></div>
-                </div>
-                <div class="text-center" style="border-top: 1px solid #333; padding-top: 10px;">
-                    Res. Líquido: <span id="c2DisplayResultado">R$ 0,00</span>
-                </div>
-            </div>
-
-            <div id="configCiclo2" class="card">
-                <label>Qtd Entradas:</label>
-                <select id="c2Qtd">
-                    <option value="4" selected>4 Entradas</option>
-                    <option value="6">6 Entradas</option>
-                </select>
-                <button class="btn btn-primary" onclick="iniciarCiclo2()">Gerar Ciclo 2</button>
-            </div>
-
-            <div id="areaCardsCiclo2"></div>
-            
-            <button id="btnIrCicloFinal" class="btn btn-red hidden" onclick="irParaCicloFinal()">Ir para Ciclo Final (Recuperação)</button>
-        </section>
-
-        <section id="pageCicloFinal" class="hidden">
-            <div class="section-title"><h2>🟥 CICLO FINAL</h2></div>
-            <div id="configCicloFinal" class="card">
-                <button class="btn btn-primary" onclick="gerarCardsCicloFinal()">Iniciar Recuperação (2 Entradas)</button>
-            </div>
-            <div id="areaCardsCicloFinal"></div>
-            
-            <div id="msgEncerramentoFinal" class="warning-box hidden">
-                ⚠️ **Limite de RED atingido**<br>O que deseja fazer agora?
-                <div class="flex" style="margin-top:10px;">
-                    <button class="btn btn-primary" onclick="reiniciarCicloFinal()">🔄 Reiniciar Ciclo</button>
-                    <button class="btn btn-red" onclick="abrirModalFinalizar()">🗓 Finalizar Dia</button>
-                </div>
-            </div>
-            <button id="btnConcluidoFinal" class="btn btn-green hidden" onclick="voltarParaCiclo2()">✅ Recuperação Concluída (Voltar)</button>
-        </section>
-
         <div id="footer">
-            <a href="https://evoketstudio.com.br/" target="_blank" rel="noopener noreferrer">Desenvolvido por Evoket Studios</a>
+            <a href="https://evoketstudio.com.br/" target="_blank">Desenvolvido por Evoket Studios</a>
         </div>
     </div>
 
@@ -240,51 +139,27 @@
         const APP_KEY = 'metodoGols_v8';
         let state = {
             sessionName: '',
-            bancaInicial: 0,
-            bancaAtual: 0,
-            stakeValor: 0,
-            comissaoAtiva: true,
-            historico: [],
-            ciclo2: { ativo: false, resultado: 0, cards: [] },
-            cicloFinal: { ativo: false, cards: [] }
+            bancaInicial: 1000, // Exemplo de banca já existente
+            bancaAtual: 1000,
+            historico: []
         };
 
-        // --- INICIALIZAÇÃO E BLOQUEIOS ---
         function validarSessao() {
             const nome = document.getElementById('sessionName').value.trim();
             const aviso = document.getElementById('msgAvisoNome');
-            const btns = [
-                document.getElementById('btnSetBanca'),
-                document.getElementById('btnGreen'),
-                document.getElementById('btnRed')
-            ];
+            const btns = [document.getElementById('btnGreen'), document.getElementById('btnRed')];
 
             if (nome.length > 0) {
                 aviso.classList.add('hidden');
-                btns.forEach(b => { if(b) b.disabled = false; });
+                btns.forEach(b => b.disabled = false);
                 state.sessionName = nome;
                 save();
             } else {
                 aviso.classList.remove('hidden');
-                btns.forEach(b => { if(b) b.disabled = true; });
+                btns.forEach(b => b.disabled = true);
             }
         }
 
-        function definirBancaIncial() {
-            const val = parseMoney(document.getElementById('inputBancaManual').value);
-            if (val <= 0) return alert("Insira um valor de banca.");
-            state.bancaInicial = val;
-            state.bancaAtual = val;
-            
-            document.getElementById('blocoDefinirBanca').classList.add('hidden');
-            document.getElementById('blocoAjustes').classList.remove('hidden');
-            document.getElementById('operacoesStart').classList.remove('hidden');
-            
-            calcularStake();
-            save();
-        }
-
-        // --- LÓGICA FINANCEIRA ---
         function maskCurrency(i) {
             let v = i.value.replace(/\D/g, "");
             v = (v / 100).toFixed(2) + "";
@@ -292,130 +167,37 @@
             v = v.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
             i.value = v;
         }
+
         function parseMoney(s) {
             return parseFloat(s.replace(/\./g, "").replace(",", ".")) || 0;
         }
+
         function formatMoney(v) {
             return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
         }
 
         function calcularStake() {
             const p = parseFloat(document.getElementById('selectStakePercent').value);
-            state.stakeValor = state.bancaInicial * p;
-            document.getElementById('displayStakeVal').innerText = formatMoney(state.stakeValor);
-            document.getElementById('recOddLow').innerText = formatMoney(state.stakeValor * 0.3);
-            document.getElementById('recOddMid').innerText = formatMoney(state.stakeValor * 0.2);
-        }
-
-        function toggleComissao() {
-            state.comissaoAtiva = document.getElementById('commissionToggle').checked;
-            save();
+            const stake = state.bancaInicial * p;
+            document.getElementById('displayStakeVal').innerText = formatMoney(stake);
         }
 
         function registrarGreenStart() {
-            const bruto = parseMoney(document.getElementById('inputGreenStart').value);
-            if (bruto <= 0) return;
-            const liq = state.comissaoAtiva ? bruto * 0.961 : bruto;
-            state.bancaAtual += liq;
-            document.getElementById('inputGreenStart').value = '';
+            const val = parseMoney(document.getElementById('inputGreenStart').value);
+            if (val <= 0) return;
+            state.bancaAtual += val;
             save();
-            alert(`Green: ${formatMoney(liq)} adicionado.`);
+            document.getElementById('inputGreenStart').value = '';
         }
 
         function registrarRedStart() {
             const val = parseMoney(document.getElementById('inputRedStart').value);
             if (val <= 0) return;
             state.bancaAtual -= val;
+            save();
             document.getElementById('inputRedStart').value = '';
-            document.getElementById('pageStart').classList.add('hidden');
-            document.getElementById('pageCiclo2').classList.remove('hidden');
-            save();
         }
 
-        // --- CICLOS ---
-        function iniciarCiclo2() {
-            state.ciclo2.ativo = true;
-            document.getElementById('configCiclo2').classList.add('hidden');
-            document.getElementById('c2Dashboard').classList.remove('hidden');
-            renderC2();
-            save();
-        }
-
-        function renderC2() {
-            const qtd = parseInt(document.getElementById('c2Qtd').value);
-            const container = document.getElementById('areaCardsCiclo2');
-            container.innerHTML = '';
-            const valEntrada = (state.stakeValor * 0.25);
-            
-            for(let i=0; i<qtd; i++) {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `<h4>Entrada ${i+1} (${formatMoney(valEntrada)})</h4>
-                    <div class="flex"><input type="text" placeholder="Green" oninput="maskCurrency(this)" id="c2g${i}">
-                    <input type="text" placeholder="Red" oninput="maskCurrency(this)" id="c2r${i}"></div>
-                    <button class="btn btn-primary" onclick="aplicarC2(${i}, ${valEntrada})">Aplicar</button>`;
-                container.appendChild(card);
-            }
-        }
-
-        function aplicarC2(idx, entrada) {
-            const g = parseMoney(document.getElementById(`c2g${idx}`).value);
-            const r = parseMoney(document.getElementById(`c2r${idx}`).value);
-            if(g > 0) state.bancaAtual += (state.comissaoAtiva ? g * 0.961 : g);
-            else if(r > 0) state.bancaAtual -= r;
-            
-            const liq = state.bancaAtual - state.bancaInicial;
-            if (liq < -(state.stakeValor * 0.5)) {
-                document.getElementById('btnIrCicloFinal').classList.remove('hidden');
-            }
-            save();
-        }
-
-        function irParaCicloFinal() {
-            document.getElementById('pageCiclo2').classList.add('hidden');
-            document.getElementById('pageCicloFinal').classList.remove('hidden');
-            save();
-        }
-
-        function gerarCardsCicloFinal() {
-            const container = document.getElementById('areaCardsCicloFinal');
-            container.innerHTML = '';
-            const val = state.stakeValor * 0.8;
-            for(let i=0; i<2; i++) {
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `<h4>Recuperação ${i+1} (${formatMoney(val)})</h4>
-                    <div class="flex"><input type="text" placeholder="Green" oninput="maskCurrency(this)" id="cfg${i}">
-                    <input type="text" placeholder="Red" oninput="maskCurrency(this)" id="cfr${i}"></div>
-                    <button class="btn btn-primary" onclick="aplicarCF(${i})">Aplicar</button>`;
-                container.appendChild(card);
-            }
-            document.getElementById('configCicloFinal').classList.add('hidden');
-        }
-
-        function aplicarCF(idx) {
-            const g = parseMoney(document.getElementById(`cfg${idx}`).value);
-            const r = parseMoney(document.getElementById(`cfr${idx}`).value);
-            if(g > 0) {
-                state.bancaAtual += (state.comissaoAtiva ? g * 0.961 : g);
-                document.getElementById('btnConcluidoFinal').classList.remove('hidden');
-            } else if (r > 0) {
-                state.bancaAtual -= r;
-                document.getElementById('msgEncerramentoFinal').classList.remove('hidden');
-            }
-            save();
-        }
-
-        function reiniciarCicloFinal() {
-            location.reload();
-        }
-
-        function voltarParaCiclo2() {
-            document.getElementById('pageCicloFinal').classList.add('hidden');
-            document.getElementById('pageCiclo2').classList.remove('hidden');
-        }
-
-        // --- SISTEMA ---
         function save() {
             localStorage.setItem(APP_KEY, JSON.stringify(state));
             updateUI();
@@ -424,65 +206,20 @@
         function updateUI() {
             document.getElementById('topoBancaInicial').innerText = formatMoney(state.bancaInicial);
             document.getElementById('topoBancaAtual').innerText = formatMoney(state.bancaAtual);
-            document.getElementById('topoBancaAtual').className = state.bancaAtual >= state.bancaInicial ? 'text-green' : 'text-red';
-        }
-
-        function abrirModalFinalizar() {
-            document.getElementById('modalFinalBanca').innerText = formatMoney(state.bancaAtual);
-            toggleModal('modalFinalizar');
-        }
-
-        function executarFinalizarDia() {
-            state.historico.unshift({
-                nome: state.sessionName || 'Sem nome',
-                data: new Date().toLocaleDateString(),
-                resultado: state.bancaAtual - state.bancaInicial
-            });
-            state.bancaInicial = 0;
-            state.bancaAtual = 0;
-            state.sessionName = '';
-            localStorage.setItem(APP_KEY, JSON.stringify(state));
-            location.reload();
         }
 
         function toggleModal(id) {
-            const m = document.getElementById(id);
-            m.classList.toggle('hidden');
-            if(id === 'modalResumo') {
-                const res = document.getElementById('resumoGeral');
-                const diff = state.bancaAtual - state.bancaInicial;
-                res.innerHTML = `
-                    <div class="card">
-                        <div class="entry-row"><span>Sessão:</span> <b>${state.sessionName}</b></div>
-                        <div class="entry-row"><span>Resultado:</span> <b class="${diff>=0?'text-green':'text-red'}">${formatMoney(diff)}</b></div>
-                    </div>`;
-                const lista = document.getElementById('listaHistorico');
-                lista.innerHTML = state.historico.map(h => `
-                    <div class="entry-row">
-                        <span>${h.data} - ${h.nome}</span>
-                        <b class="${h.resultado>=0?'text-green':'text-red'}">${formatMoney(h.resultado)}</b>
-                    </div>
-                `).join('');
-            }
+            document.getElementById(id).classList.toggle('hidden');
         }
 
         window.onload = () => {
             const saved = localStorage.getItem(APP_KEY);
-            if(saved) {
-                state = JSON.parse(saved);
-                document.getElementById('sessionName').value = state.sessionName;
-                if(state.bancaInicial > 0) {
-                    document.getElementById('blocoDefinirBanca').classList.add('hidden');
-                    document.getElementById('blocoAjustes').classList.remove('hidden');
-                    document.getElementById('operacoesStart').classList.remove('hidden');
-                    calcularStake();
-                }
-            }
+            if(saved) state = JSON.parse(saved);
+            document.getElementById('sessionName').value = state.sessionName || '';
             validarSessao();
             updateUI();
+            calcularStake();
         };
-
-        function toggleTooltip(id) { document.getElementById(id).classList.toggle('hidden'); }
     </script>
 </body>
 </html>
