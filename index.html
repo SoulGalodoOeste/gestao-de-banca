@@ -17,10 +17,9 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        
         body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 80px; }
         
-        /* Utility Classes */
+        /* Classes Utilitárias */
         .text-green { color: var(--green); }
         .text-red { color: var(--red); }
         .text-yellow { color: var(--yellow); }
@@ -34,15 +33,14 @@
         .btn-red { background-color: var(--red); color: white; }
         .btn-primary { background-color: var(--primary); color: white; }
         .btn-outline { background-color: transparent; border: 1px solid var(--text-color); color: var(--text-color); }
-        .btn:disabled { background: #333; color: #777; cursor: not-allowed; }
+        .btn:disabled { background: #333; color: #777; cursor: not-allowed; border-color: #444; }
         
         input, select { width: 100%; padding: 12px; margin: 5px 0; background: #2c2c2c; border: 1px solid #444; color: white; border-radius: var(--border-radius); font-size: 1rem; }
-        input:disabled { background: #1a1a1a; color: #777; border-color: #333; }
 
         /* Topo Fixo */
         header { position: sticky; top: 0; background: #1a1a1a; padding: 15px; border-bottom: 2px solid #333; z-index: 100; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
-        .header-info h4 { font-size: 0.8rem; color: #aaa; }
-        .header-info h2 { font-size: 1.1rem; margin-top: 2px; }
+        .header-info h4 { font-size: 0.7rem; color: #aaa; letter-spacing: 0.5px; }
+        .header-info span { font-size: 1rem; }
         .header-actions { display: flex; gap: 15px; }
         .btn-icon { background: transparent; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-color); }
 
@@ -50,50 +48,30 @@
         .container { max-width: 600px; margin: 0 auto; padding: 15px; }
         .card { background: var(--card-bg); padding: 15px; border-radius: var(--border-radius); margin-bottom: 15px; border: 1px solid #333; }
         
+        .section-title { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; color: var(--yellow); }
+        .info-icon { background: #444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; cursor: pointer; }
+        .tooltip-box { background: #333; padding: 10px; border-radius: var(--border-radius); font-size: 0.9rem; margin-bottom: 15px; border-left: 3px solid var(--yellow); }
+
         /* Dashboard Ciclo 2 */
         .dashboard-c2 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 5px; margin-bottom: 10px; text-align: center; }
         .dash-item { background: #252525; padding: 8px; border-radius: 5px; border: 1px solid #333; }
         .dash-label { font-size: 0.7rem; color: #888; display: block; }
         .dash-val { font-size: 0.9rem; font-weight: bold; }
 
-        /* Tooltip */
-        .section-title { display: flex; align-items: center; gap: 8px; margin-bottom: 15px; color: var(--yellow); }
-        .info-icon { background: #444; color: white; border-radius: 50%; width: 20px; height: 20px; display: flex; justify-content: center; align-items: center; font-size: 0.8rem; cursor: pointer; }
-        .tooltip-box { background: #333; padding: 10px; border-radius: var(--border-radius); font-size: 0.9rem; margin-bottom: 15px; border-left: 3px solid var(--yellow); }
-
         /* Modal */
         .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 200; display: flex; justify-content: center; align-items: center; padding: 20px; }
         .modal-content { background: var(--card-bg); padding: 20px; border-radius: var(--border-radius); width: 100%; max-width: 500px; max-height: 80vh; overflow-y: auto; text-align: center; }
-        .history-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; text-align: left; }
-
-        /* Logic Specifics */
+        
         .entry-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #333; font-size: 0.9rem; }
-        .alert-box { background: rgba(231, 76, 60, 0.2); border: 1px solid var(--red); color: #ffadad; padding: 10px; border-radius: var(--border-radius); margin: 10px 0; text-align: center; }
-        .success-box { background: rgba(46, 204, 113, 0.2); border: 1px solid var(--green); color: #abebc6; padding: 10px; border-radius: var(--border-radius); margin: 10px 0; text-align: center; }
-        .info-box { background: rgba(52, 152, 219, 0.2); border: 1px solid var(--primary); color: #aed6f1; padding: 10px; border-radius: var(--border-radius); margin: 10px 0; text-align: center; }
         .warning-box { background: rgba(255, 165, 0, 0.2); border: 1px solid orange; color: #ffebcc; padding: 12px; border-radius: var(--border-radius); margin: 10px 0; text-align: center; }
         
-        /* Checkbox e Rodapé */
-        .checkbox-container { display: flex; align-items: center; gap: 10px; margin: 10px 0; cursor: pointer; }
-        .checkbox-container input { width: auto; margin: 0; }
-        .checkbox-container label { font-size: 0.9rem; color: #aaa; cursor: pointer; }
-        
-        #footer {
-            margin-top: 40px;
-            padding: 10px 0;
-            text-align: center;
-            font-size: 0.8rem;
-        }
-        #footer a {
-            color: rgba(224, 224, 224, 0.65); /* Cor neutra / Opacidade 65% */
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        #footer a:hover {
-            color: rgba(224, 224, 224, 0.9); /* Leve destaque no hover */
-            text-decoration: underline;
-        }
+        /* Rodapé */
+        #footer { margin-top: 40px; padding: 10px 0; text-align: center; font-size: 0.8rem; }
+        #footer a { color: rgba(224, 224, 224, 0.65); text-decoration: none; transition: color 0.2s; }
+        #footer a:hover { color: rgba(224, 224, 224, 0.9); text-decoration: underline; }
 
+        .checkbox-container { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .checkbox-container input { width: auto; }
     </style>
 </head>
 <body>
@@ -101,14 +79,7 @@
     <div id="modalResumo" class="modal hidden">
         <div class="modal-content" style="text-align: left;">
             <h3 style="margin-bottom: 15px;"><span id="resumoTitulo">📊 Resumo</span></h3>
-            <div class="card">
-                <h4>Hoje</h4>
-                <div class="entry-row"><span>Banca Inicial:</span> <span id="resumoBancaIni">R$ 0,00</span></div>
-                <div class="entry-row"><span>Banca Atual:</span> <span id="resumoBancaAtual">R$ 0,00</span></div>
-                <div class="entry-row"><span>Resultado:</span> <span id="resumoResultado">R$ 0,00 (0%)</span></div>
-                <div class="entry-row" style="margin-top: 10px; border-top: 1px solid #444;"><span>Greens:</span> <span id="resumoGreens" class="text-green" style="font-weight: bold;">0</span></div>
-                <div class="entry-row" style="border-bottom: none;"><span>Reds:</span> <span id="resumoReds" class="text-red" style="font-weight: bold;">0</span></div>
-            </div>
+            <div id="resumoGeral"></div>
             <h4 style="margin-top: 20px;">Histórico (Últimos 7 dias)</h4>
             <div id="listaHistorico"></div>
             <button class="btn btn-primary" onclick="toggleModal('modalResumo')">Fechar</button>
@@ -119,8 +90,8 @@
         <div class="modal-content">
             <h3 style="margin-bottom: 15px;">🗓 Finalizar Dia</h3>
             <p>Deseja encerrar o dia/sessão com os valores atuais da banca?</p>
-            <div class="card" style="margin-top: 15px; text-align: left;">
-                <div class="entry-row"><span>Banca Atual:</span> <span id="modalFinalBanca" style="font-weight: bold;">R$ 0,00</span></div>
+            <div class="card" style="margin: 15px 0; text-align: left;">
+                <div class="entry-row"><span>Banca Final:</span> <span id="modalFinalBanca" style="font-weight: bold;">R$ 0,00</span></div>
             </div>
             <div class="flex">
                 <button class="btn btn-primary" onclick="executarFinalizarDia()">✅ SIM – Finalizar Dia</button>
@@ -132,15 +103,15 @@
     <header>
         <div class="header-info">
             <h4>BANCA INICIAL</h4>
-            <span id="topoBancaInicial" class="text-white">R$ 0,00</span>
+            <span id="topoBancaInicial">R$ 0,00</span>
         </div>
         <div class="header-info text-center">
             <h4>BANCA ATUAL</h4>
-            <span id="topoBancaAtual" style="font-weight: bold; font-size: 1.2rem;">R$ 0,00</span>
+            <span id="topoBancaAtual" style="font-weight: bold;">R$ 0,00</span>
         </div>
         <div class="header-actions">
-            <button class="btn-icon" onclick="checkSessionNameAndAction(abrirModalFinalizar)">🗓</button>
-            <button class="btn-icon" onclick="toggleModal('modalResumo')">📊</button>
+            <button class="btn-icon" title="Finalizar Dia" onclick="abrirModalFinalizar()">🗓</button>
+            <button class="btn-icon" title="Resumo" onclick="toggleModal('modalResumo')">📊</button>
         </div>
     </header>
 
@@ -148,74 +119,64 @@
 
         <section id="pageStart">
             <div class="section-title">
-                <h2>🟦 START (Controle do Dia)</h2>
+                <h2>🟦 START (Gestão de Risco)</h2>
             </div>
 
-            <div class="card" id="setupCard">
-                <h3>1️⃣ Iniciar Banca</h3>
-                <label>Banca Inicial do Dia (R$)</label>
-                <input type="text" id="inputBancaInicial" placeholder="Ex: 500,00" oninput="maskCurrency(this)">
-                
-                <div id="ultimoSalvamentoInfo" style="margin-top: 10px;">
-                    </div>
-                
-                <button class="btn btn-primary" id="btnIniciarBanca" onclick="iniciarBanca()">Iniciar Banca</button>
+            <div class="card">
+                <h3>1️⃣ Nome do Dia/Sessão</h3>
+                <input type="text" id="sessionName" placeholder="Ex: Dom 15/12 ou Sessão Tarde" oninput="validarSessao()">
+                <p id="msgAvisoNome" class="text-yellow" style="font-size: 0.8rem; margin-top: 5px;">
+                    ⚠️ Informe o nome do dia/sessão para iniciar as operações.
+                </p>
             </div>
-            
-            <div id="startContent" class="hidden">
-                <div class="card" id="nameCard">
-                   <label>Nome do dia/sessão:</label> 
-                   <input type="text" id="sessionName" placeholder="Dia 01..." oninput="checkSessionName()">
-                   <p id="sessionNameAlert" class="alert-box hidden" style="margin: 5px 0 0 0; padding: 5px; font-size: 0.85rem; border-color: orange;">
-                        Informe o nome do dia/sessão para iniciar.
-                   </p>
+
+            <div id="configDia" class="card">
+                <h3>2️⃣ Configuração da Banca</h3>
+                <div id="blocoDefinirBanca">
+                    <label>Definir Banca Inicial (R$):</label>
+                    <input type="text" id="inputBancaManual" placeholder="Ex: 500,00" oninput="maskCurrency(this)">
+                    <button id="btnSetBanca" class="btn btn-primary" onclick="definirBancaIncial()">Definir e Iniciar</button>
                 </div>
-
-                <div class="card">
-                    <div class="checkbox-container" onclick="toggleComissao()">
-                        <input type="checkbox" id="commissionToggle">
+                
+                <div id="blocoAjustes" class="hidden">
+                    <div class="checkbox-container" style="margin-top: 10px;">
+                        <input type="checkbox" id="commissionToggle" onchange="toggleComissao()" checked>
                         <label for="commissionToggle">Aplicar comissão nos Greens (3,9%)</label>
                     </div>
-                </div>
 
-                <div class="card">
-                    <h3>2️⃣ Definição da Stake</h3>
-                    <label>Perfil:</label>
+                    <label style="margin-top: 15px; display: block;">Perfil de Stake:</label>
                     <select id="selectStakePercent" onchange="calcularStake()">
                         <option value="0.05">5% - Conservador</option>
                         <option value="0.10" selected>10% - Recomendado</option>
                         <option value="0.20">20% - Agressivo</option>
                     </select>
                     <div style="margin-top: 10px; font-weight: bold;">
-                        Stake Calculada: <span id="displayStakeVal" class="text-green">R$ 0,00</span>
+                        Stake: <span id="displayStakeVal" class="text-green">R$ 0,00</span>
                     </div>
                 </div>
+            </div>
 
+            <div id="operacoesStart" class="hidden">
                 <div class="card">
-                    <div class="section-title" style="margin:0">
+                    <div class="section-title">
                         <h3>3️⃣ Entradas Recomendadas</h3>
                         <div class="info-icon" onclick="toggleTooltip('ttStart')">?</div>
                     </div>
-                    <div id="ttStart" class="tooltip-box hidden">
-                        <strong>START:</strong> Identifique a partida que foge do padrão.
-                    </div>
-                    <div style="margin-top: 10px;">
-                        <div class="entry-row"><span>Odd até 1.05 (30%)</span> <span id="recOddLow">R$ 0,00</span></div>
-                        <div class="entry-row"><span>Odd até 1.10 (20%)</span> <span id="recOddMid">R$ 0,00</span></div>
-                        <div class="entry-row"><span>Odd > 1.10 (10%)</span> <span id="recOddHigh">R$ 0,00</span></div>
-                    </div>
+                    <div id="ttStart" class="tooltip-box hidden">Foco em odds baixas para consistência inicial.</div>
+                    <div class="entry-row"><span>Odd até 1.05 (30%):</span> <span id="recOddLow">R$ 0,00</span></div>
+                    <div class="entry-row"><span>Odd até 1.10 (20%):</span> <span id="recOddMid">R$ 0,00</span></div>
                 </div>
 
                 <div class="card" style="border-color: var(--green);">
-                    <h3 class="text-green">🟢 REGISTRO DE GREEN</h3>
-                    <input type="text" id="inputGreenStart" placeholder="Valor do Green (R$)" oninput="maskCurrency(this)">
-                    <button class="btn btn-green" id="btnGreenStart" onclick="checkSessionNameAndAction(registrarGreenStart)">Confirmar Green</button>
+                    <h3 class="text-green">🟢 REGISTRAR GREEN</h3>
+                    <input type="text" id="inputGreenStart" placeholder="Valor Bruto (R$)" oninput="maskCurrency(this)">
+                    <button id="btnGreen" class="btn btn-green" onclick="registrarGreenStart()">Confirmar Green</button>
                 </div>
 
                 <div class="card" style="border-color: var(--red);">
-                    <h3 class="text-red">🔴 REGISTRO DE RED</h3>
+                    <h3 class="text-red">🔴 REGISTRAR RED</h3>
                     <input type="text" id="inputRedStart" placeholder="Valor do Red (R$)" oninput="maskCurrency(this)">
-                    <button class="btn btn-red" id="btnRedStart" onclick="checkSessionNameAndAction(registrarRedStart)">Confirmar Red</button>
+                    <button id="btnRed" class="btn btn-red" onclick="registrarRedStart()">Confirmar Red</button>
                 </div>
             </div>
         </section>
@@ -223,722 +184,305 @@
         <section id="pageCiclo2" class="hidden">
             <div class="section-title">
                 <h2>🟨 CICLO 2 (Busca de Lucro)</h2>
-                <div class="info-icon" onclick="toggleTooltip('ttCiclo2')">?</div>
             </div>
-            <div id="ttCiclo2" class="tooltip-box hidden">
-                <strong>Ciclo 2:</strong> Buscamos lucro baseado no Total Alocado.
-                <br>Meta: +5% do Total Alocado.
-                <br>Stop: -15% do Total Alocado.
-            </div>
-
+            
             <div id="c2Dashboard" class="card hidden">
-                <h4 style="margin-bottom: 10px; color: var(--yellow);">📊 Controle do Ciclo</h4>
                 <div class="dashboard-c2">
                     <div class="dash-item">
                         <span class="dash-label">Alocado</span>
                         <span id="c2DisplayTotal" class="dash-val">R$ 0,00</span>
                     </div>
-                    <div class="dash-item" style="border-color: var(--green);">
-                        <span class="dash-label">Meta (+5%)</span>
-                        <span id="c2DisplayMeta" class="dash-val text-green">R$ 0,00</span>
-                    </div>
-                    <div class="dash-item" style="border-color: var(--red);">
-                        <span class="dash-label">Limite (-15%)</span>
-                        <span id="c2DisplayLimite" class="dash-val text-red">R$ 0,00</span>
-                    </div>
+                    <div class="dash-item"><span class="dash-label">Meta</span><span id="c2DisplayMeta" class="dash-val text-green">R$ 0,00</span></div>
+                    <div class="dash-item"><span class="dash-label">Limite</span><span id="c2DisplayLimite" class="dash-val text-red">R$ 0,00</span></div>
                 </div>
-                <div class="text-center" style="margin-top: 5px; border-top: 1px solid #333; padding-top: 5px;">
-                    Res. Líquido: <span id="c2DisplayResultado" style="font-weight: bold;">R$ 0,00 (0%)</span>
+                <div class="text-center" style="border-top: 1px solid #333; padding-top: 10px;">
+                    Res. Líquido: <span id="c2DisplayResultado">R$ 0,00</span>
                 </div>
             </div>
 
-            <div class="card" id="configCiclo2">
-                <h3>1️⃣ Configuração do Ciclo</h3>
-                <label>Qtd Entradas (2 a 6)</label>
+            <div id="configCiclo2" class="card">
+                <label>Qtd Entradas:</label>
                 <select id="c2Qtd">
-                    <option value="2">2 Entradas</option>
-                    <option value="3">3 Entradas</option>
                     <option value="4" selected>4 Entradas</option>
-                    <option value="5">5 Entradas</option>
                     <option value="6">6 Entradas</option>
                 </select>
-
-                <label>Perfil (% da Stake por entrada)</label>
-                <select id="c2Perfil">
-                    <option value="0.20">20% - Conservador</option>
-                    <option value="0.25" selected>25% - Padrão</option>
-                    <option value="0.30">30% - Agressivo</option>
-                </select>
-
-                <button class="btn btn-primary" id="btnIniciarCiclo2" onclick="checkSessionNameAndAction(iniciarCiclo2)">Gerar Ciclo</button>
+                <button class="btn btn-primary" onclick="iniciarCiclo2()">Gerar Ciclo 2</button>
             </div>
 
-            <div id="areaCardsCiclo2">
-                </div>
-
-            <div id="alertaMetaCiclo2" class="success-box hidden">
-                ✅ Parabéns! Meta do Ciclo 2 atingida (+5%).<br>Redirecionando para START...
-            </div>
-
-            <div id="alertaLimiteCiclo2" class="alert-box hidden">
-                🚨 Limite de red do Ciclo 2 atingido (-15%).<br>
-                Você pode seguir para o Ciclo Final ou continuar preenchendo os cards se houver jogos em andamento.
-            </div>
-
-            <div id="msgReincioCiclo2" class="info-box hidden">
-                ℹ️ Ciclo 2 concluído sem atingir meta ou limite.<br>Iniciando novo Ciclo 2 automaticamente...
-            </div>
-
-            <button id="btnIrCicloFinal" class="btn btn-red hidden" onclick="checkSessionNameAndAction(irParaCicloFinal)">Ir para Ciclo Final (Recuperação)</button>
+            <div id="areaCardsCiclo2"></div>
+            
+            <button id="btnIrCicloFinal" class="btn btn-red hidden" onclick="irParaCicloFinal()">Ir para Ciclo Final (Recuperação)</button>
         </section>
 
         <section id="pageCicloFinal" class="hidden">
-            <div class="section-title">
-                <h2>🟥 CICLO FINAL (Recuperação)</h2>
-                <div class="info-icon" onclick="toggleTooltip('ttCicloFinal')">?</div>
+            <div class="section-title"><h2>🟥 CICLO FINAL</h2></div>
+            <div id="configCicloFinal" class="card">
+                <button class="btn btn-primary" onclick="gerarCardsCicloFinal()">Iniciar Recuperação (2 Entradas)</button>
             </div>
-            <div id="ttCicloFinal" class="tooltip-box hidden">
-                <strong>Ciclo Final:</strong> Recuperação de Red. Busque apenas recuperar o prejuízo.
-            </div>
-
-            <div class="card" id="configCicloFinal">
-                <h3>1️⃣ Configuração</h3>
-                <label>Percentual da Stake</label>
-                <select id="cfPerfil">
-                    <option value="0.75">75% - Conservador</option>
-                    <option value="0.80" selected>80% - Recomendado</option>
-                    <option value="0.85">85% - Agressivo</option>
-                </select>
-                <button class="btn btn-primary" id="btnGerarCF" onclick="checkSessionNameAndAction(gerarCardsCicloFinal)">Gerar 2 Entradas</button>
-            </div>
-
             <div id="areaCardsCicloFinal"></div>
-
-            <div id="msgSucessoFinal" class="success-box hidden">
-                ✅ Ciclo final concluído com 2 Greens de recuperação.
-            </div>
             
             <div id="msgEncerramentoFinal" class="warning-box hidden">
-                ⚠️ **Limite máximo de RED do dia atingido**<br>
-                Você concluiu o Ciclo Final. O que deseja fazer agora?
-                <hr style="margin: 10px 0; border-color: #ffc266;">
-                <div class="flex">
-                    <button class="btn btn-primary" onclick="reiniciarCicloFinal()">🔄 Reiniciar Ciclo com Banca Atual</button>
+                ⚠️ **Limite de RED atingido**<br>O que deseja fazer agora?
+                <div class="flex" style="margin-top:10px;">
+                    <button class="btn btn-primary" onclick="reiniciarCicloFinal()">🔄 Reiniciar Ciclo</button>
                     <button class="btn btn-red" onclick="abrirModalFinalizar()">🗓 Finalizar Dia</button>
                 </div>
-                <small style="display: block; margin-top: 5px; color: #ffebcc;">Recomendado reiniciar apenas se ainda houver jogos e boas oportunidades.</small>
             </div>
-
-
-            <button id="btnConcluidoFinal" class="btn btn-primary hidden" onclick="checkSessionNameAndAction(voltarParaCiclo2)">Concluído (Voltar)</button>
+            <button id="btnConcluidoFinal" class="btn btn-green hidden" onclick="voltarParaCiclo2()">✅ Recuperação Concluída (Voltar)</button>
         </section>
-        
-        <div id="footer">
-            <a href="https://evoketstudio.com.br/" target="_blank" rel="noopener noreferrer">
-                Desenvolvido por Evoket Studios
-            </a>
-        </div>
 
+        <div id="footer">
+            <a href="https://evoketstudio.com.br/" target="_blank" rel="noopener noreferrer">Desenvolvido por Evoket Studios</a>
+        </div>
     </div>
 
     <script>
-        // --- CONSTANTES ---
-        const APP_KEY = 'metodoGolsApp_v7_final';
-        const COMMISSION_RATE = 0.039; // 3.9%
-        const COMM_KEY = 'commissionEnabled';
-        
-        // --- ESTADO GLOBAL ---
+        const APP_KEY = 'metodoGols_v8';
         let state = {
+            sessionName: '',
             bancaInicial: 0,
             bancaAtual: 0,
-            stakeValor: 0, 
+            stakeValor: 0,
+            comissaoAtiva: true,
             historico: [],
-            greensCountDia: 0, 
-            redsCountDia: 0,
-            commissionEnabled: true, // NOVO: Inicia ligado por padrão
-            ciclo2: {
-                ativo: false,
-                configQtd: 4,
-                configPerfil: 0.25,
-                totalAlocado: 0,
-                metaVal: 0,
-                limiteVal: 0,
-                somaGreens: 0,
-                somaReds: 0,
-                resultadoLiquido: 0,
-                cardsUsados: 0
-            },
-            cicloFinal: {
-                ativo: false,
-                totalCards: 2, 
-                cardsUsados: 0, 
-                greensCount: 0
-            }
+            ciclo2: { ativo: false, resultado: 0, cards: [] },
+            cicloFinal: { ativo: false, cards: [] }
         };
 
-        // --- UTILITÁRIOS ---
-        function formatMoney(value) {
-            return value.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
-        }
-        function parseMoney(valueStr) {
-            if (!valueStr) return 0;
-            if (valueStr.includes(',')) valueStr = valueStr.replace(/\./g, '').replace(',', '.');
-            return parseFloat(valueStr);
-        }
-        function maskCurrency(input) {
-            let value = input.value.replace(/\D/g, "");
-            value = (value / 100).toFixed(2) + "";
-            value = value.replace(".", ",");
-            value = value.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-            input.value = value;
-        }
-        function toggleTooltip(id) { document.getElementById(id).classList.toggle('hidden'); }
-        function toggleModal(id) {
-            document.getElementById(id).classList.toggle('hidden');
-            if(id === 'modalResumo') renderResumo();
-        }
-
-        // --- SALVAMENTO/CARREGAMENTO ---
-        function saveData() {
-            localStorage.setItem(APP_KEY, JSON.stringify(state));
-            localStorage.setItem(COMM_KEY, state.commissionEnabled);
-            updateHeader();
-        }
-        
-        function loadData() {
-            const saved = localStorage.getItem(APP_KEY);
-            const commSaved = localStorage.getItem(COMM_KEY);
-            
-            if (commSaved !== null) {
-                state.commissionEnabled = commSaved === 'true';
-            }
-
-            if (saved) {
-                state = JSON.parse(saved);
-                
-                // Garantir que novos campos existam
-                if (typeof state.greensCountDia === 'undefined') state.greensCountDia = 0;
-                if (typeof state.redsCountDia === 'undefined') state.redsCountDia = 0;
-                if (typeof state.commissionEnabled === 'undefined') state.commissionEnabled = true;
-
-                if (state.bancaInicial > 0) {
-                    restaurarEstadoStart();
-                    
-                    if (state.ciclo2.ativo) {
-                        document.getElementById('pageStart').classList.add('hidden');
-                        document.getElementById('pageCiclo2').classList.remove('hidden');
-                        renderizarCiclo2Ativo();
-                    } else if (state.cicloFinal.ativo) {
-                        document.getElementById('pageStart').classList.add('hidden');
-                        document.getElementById('pageCicloFinal').classList.remove('hidden');
-                        document.getElementById('configCicloFinal').classList.remove('hidden');
-                        
-                        if (state.cicloFinal.cardsUsados >= state.cicloFinal.totalCards) {
-                             verificarEncerramentoCicloFinal();
-                        } else {
-                            document.getElementById('areaCardsCicloFinal').innerHTML = '';
-                        }
-                    }
-                } else {
-                    renderUltimoSalvamentoAtalho();
-                }
-            }
-            // Atualiza UI da comissão
-            document.getElementById('commissionToggle').checked = state.commissionEnabled;
-            updateHeader();
-            checkSessionName(); // Bloqueia/Desbloqueia ações
-        }
-
-        function updateHeader() {
-            document.getElementById('topoBancaInicial').innerText = formatMoney(state.bancaInicial);
-            const elAtual = document.getElementById('topoBancaAtual');
-            elAtual.innerText = formatMoney(state.bancaAtual);
-            elAtual.style.color = state.bancaAtual >= state.bancaInicial ? 'var(--green)' : 'var(--red)';
-        }
-
-        // --- 3) NOME DA SESSÃO E BLOQUEIOS ---
-        function checkSessionName() {
-            const name = document.getElementById('sessionName').value.trim();
-            const isDisabled = name === '';
-            const actionButtons = [
-                document.getElementById('btnGreenStart'),
-                document.getElementById('btnRedStart'),
-                document.getElementById('btnIniciarCiclo2'),
-                document.getElementById('btnGerarCF'),
-                // Finalizar dia e Voltar/Concluído são checados no wrapper checkSessionNameAndAction
+        // --- INICIALIZAÇÃO E BLOQUEIOS ---
+        function validarSessao() {
+            const nome = document.getElementById('sessionName').value.trim();
+            const aviso = document.getElementById('msgAvisoNome');
+            const btns = [
+                document.getElementById('btnSetBanca'),
+                document.getElementById('btnGreen'),
+                document.getElementById('btnRed')
             ];
 
-            actionButtons.forEach(btn => {
-                if (btn) btn.disabled = isDisabled;
-            });
-            
-            if (document.getElementById('pageCiclo2').classList.contains('hidden') && document.getElementById('pageCicloFinal').classList.contains('hidden')) {
-                 document.getElementById('btnIniciarBanca').disabled = isDisabled; // Bloqueia também o iniciar banca se for o primeiro passo
-            }
-
-
-            // Exibir/Esconder alerta
-            const alertElement = document.getElementById('sessionNameAlert');
-            if (isDisabled && document.getElementById('startContent').classList.contains('hidden') === false) {
-                 alertElement.classList.remove('hidden');
+            if (nome.length > 0) {
+                aviso.classList.add('hidden');
+                btns.forEach(b => { if(b) b.disabled = false; });
+                state.sessionName = nome;
+                save();
             } else {
-                 alertElement.classList.add('hidden');
+                aviso.classList.remove('hidden');
+                btns.forEach(b => { if(b) b.disabled = true; });
             }
         }
-        
-        function checkSessionNameAndAction(callback) {
-            const name = document.getElementById('sessionName').value.trim();
-            if (name === '') {
-                // Força o alerta a aparecer se não estiver no START
-                if (document.getElementById('pageCiclo2').classList.contains('hidden') === false || document.getElementById('pageCicloFinal').classList.contains('hidden') === false) {
-                     document.getElementById('sessionNameAlert').classList.remove('hidden');
-                }
-                alert("Por favor, preencha o Nome do dia/sessão para continuar.");
-                return;
-            }
-            callback();
-        }
 
-        // --- 1) COMISSÃO AUTOMÁTICA ---
-        function toggleComissao() {
-            const checkbox = document.getElementById('commissionToggle');
-            state.commissionEnabled = checkbox.checked;
-            saveData();
-            // A comissão só afeta o registro de GREEN. Não é necessário recalcular Stake/Recs.
-        }
-        
-        function getLiquidGreen(greenBruto) {
-            if (state.commissionEnabled) {
-                // greenLiquido = greenBruto * (1 - 0.039)
-                return greenBruto * (1 - COMMISSION_RATE);
-            }
-            return greenBruto;
-        }
-
-
-        // --- GLOBAL: FINALIZAR DIA ---
-        function abrirModalFinalizar() {
-            if (state.bancaInicial === 0) return alert("Inicie o dia para poder finalizá-lo.");
-            document.getElementById('modalFinalBanca').innerText = formatMoney(state.bancaAtual);
-            toggleModal('modalFinalizar');
-        }
-
-        function executarFinalizarDia() {
-            const nomeInput = document.getElementById('sessionName').value;
-            const nome = nomeInput && nomeInput.trim() !== '' ? nomeInput : "Dia " + new Date().toLocaleDateString('pt-BR');
-            const resultado = state.bancaAtual - state.bancaInicial;
-            
-            if (state.bancaInicial > 0) {
-                state.historico.unshift({ 
-                    data: new Date().toLocaleString('pt-BR'), 
-                    nome, 
-                    resultado, 
-                    bancaFinal: state.bancaAtual 
-                });
-                if(state.historico.length > 7) state.historico.pop();
-            }
-
-            state.bancaInicial = 0;
-            state.bancaAtual = 0;
-            state.stakeValor = 0;
-            state.greensCountDia = 0; 
-            state.redsCountDia = 0; 
-            // state.commissionEnabled é mantida
-            resetCiclo2State(); 
-            resetCicloFinalState(); 
-            
-            saveData();
-            
-            alert("Dia finalizado com sucesso!");
-            location.reload(); 
-        }
-
-        // --- PÁGINA 1: START ---
-        function usarUltimaBanca(banca) {
-            const input = document.getElementById('inputBancaInicial');
-            const val = banca.toFixed(2).replace('.', ',');
-            input.value = val.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
-        }
-
-        function iniciarBanca() {
-            const input = document.getElementById('inputBancaInicial');
-            const val = parseMoney(input.value);
-            if (val <= 0) return alert("Digite um valor válido.");
+        function definirBancaIncial() {
+            const val = parseMoney(document.getElementById('inputBancaManual').value);
+            if (val <= 0) return alert("Insira um valor de banca.");
             state.bancaInicial = val;
             state.bancaAtual = val;
-            saveData();
-            restaurarEstadoStart();
-        }
-        function restaurarEstadoStart() {
-            document.getElementById('inputBancaInicial').value = state.bancaInicial.toLocaleString('pt-BR', {minimumFractionDigits: 2});
-            document.getElementById('inputBancaInicial').disabled = true;
-            document.getElementById('btnIniciarBanca').classList.add('hidden');
-            document.getElementById('ultimoSalvamentoInfo').classList.add('hidden'); 
-            document.getElementById('startContent').classList.remove('hidden');
+            
+            document.getElementById('blocoDefinirBanca').classList.add('hidden');
+            document.getElementById('blocoAjustes').classList.remove('hidden');
+            document.getElementById('operacoesStart').classList.remove('hidden');
+            
             calcularStake();
-            checkSessionName();
+            save();
+        }
+
+        // --- LÓGICA FINANCEIRA ---
+        function maskCurrency(i) {
+            let v = i.value.replace(/\D/g, "");
+            v = (v / 100).toFixed(2) + "";
+            v = v.replace(".", ",");
+            v = v.replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+            i.value = v;
+        }
+        function parseMoney(s) {
+            return parseFloat(s.replace(/\./g, "").replace(",", ".")) || 0;
+        }
+        function formatMoney(v) {
+            return v.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+        }
+
+        function calcularStake() {
+            const p = parseFloat(document.getElementById('selectStakePercent').value);
+            state.stakeValor = state.bancaInicial * p;
+            document.getElementById('displayStakeVal').innerText = formatMoney(state.stakeValor);
+            document.getElementById('recOddLow').innerText = formatMoney(state.stakeValor * 0.3);
+            document.getElementById('recOddMid').innerText = formatMoney(state.stakeValor * 0.2);
+        }
+
+        function toggleComissao() {
+            state.comissaoAtiva = document.getElementById('commissionToggle').checked;
+            save();
         }
 
         function registrarGreenStart() {
-            const valBruto = parseMoney(document.getElementById('inputGreenStart').value);
-            if (!valBruto) return;
-            
-            const valLiquido = getLiquidGreen(valBruto); // Aplica comissão se ligada
-            state.bancaAtual += valLiquido;
-            state.greensCountDia++; 
+            const bruto = parseMoney(document.getElementById('inputGreenStart').value);
+            if (bruto <= 0) return;
+            const liq = state.comissaoAtiva ? bruto * 0.961 : bruto;
+            state.bancaAtual += liq;
             document.getElementById('inputGreenStart').value = '';
-            saveData();
-            alert(`Green registrado! (Bruto: ${formatMoney(valBruto)}. Líquido: ${formatMoney(valLiquido)})`);
+            save();
+            alert(`Green: ${formatMoney(liq)} adicionado.`);
         }
+
         function registrarRedStart() {
             const val = parseMoney(document.getElementById('inputRedStart').value);
-            if (!val) return;
+            if (val <= 0) return;
             state.bancaAtual -= val;
-            state.redsCountDia++; 
             document.getElementById('inputRedStart').value = '';
             document.getElementById('pageStart').classList.add('hidden');
             document.getElementById('pageCiclo2').classList.remove('hidden');
-            saveData();
-            checkSessionName(); // Recheca para habilitar botões do Ciclo 2
-        }
-        function calcularStake() {
-            const percent = parseFloat(document.getElementById('selectStakePercent').value);
-            state.stakeValor = state.bancaInicial * percent;
-            document.getElementById('displayStakeVal').innerText = formatMoney(state.stakeValor);
-            document.getElementById('recOddLow').innerText = formatMoney(state.stakeValor * 0.30);
-            document.getElementById('recOddMid').innerText = formatMoney(state.stakeValor * 0.20);
-            document.getElementById('recOddHigh').innerText = formatMoney(state.stakeValor * 0.10);
+            save();
         }
 
-        function renderUltimoSalvamentoAtalho() {
-            const infoDiv = document.getElementById('ultimoSalvamentoInfo');
-            if (state.historico.length > 0) {
-                const last = state.historico[0];
-                const bancaFinal = last.bancaFinal; 
-                
-                infoDiv.innerHTML = `
-                    <div style="font-size: 0.9rem; color: #aaa;">
-                        Última banca final salva: 
-                        <span class="text-yellow">${formatMoney(bancaFinal)}</span>
-                    </div>
-                    <button class="btn btn-outline" style="margin-top: 5px;" onclick="usarUltimaBanca(${bancaFinal})">
-                        Usar banca final do último salvamento
-                    </button>
-                `;
-            } else {
-                infoDiv.innerHTML = `<div style="font-size: 0.9rem; color: #777;">Nenhum dia salvo encontrado.</div>`;
-            }
-        }
-
-
-        // --- PÁGINA 2: CICLO 2 ---
-        function resetCiclo2State() {
-            state.ciclo2.ativo = false;
-            state.ciclo2.totalAlocado = 0;
-            state.ciclo2.metaVal = 0;
-            state.ciclo2.limiteVal = 0;
-            state.ciclo2.somaGreens = 0;
-            state.ciclo2.somaReds = 0;
-            state.ciclo2.resultadoLiquido = 0;
-            state.ciclo2.cardsUsados = 0;
-            
-            document.getElementById('c2Dashboard').classList.add('hidden');
-            document.getElementById('configCiclo2').classList.remove('hidden');
-            document.getElementById('areaCardsCiclo2').innerHTML = '';
-            document.getElementById('alertaMetaCiclo2').classList.add('hidden');
-            document.getElementById('alertaLimiteCiclo2').classList.add('hidden');
-            document.getElementById('btnIrCicloFinal').classList.add('hidden');
-        }
-
+        // --- CICLOS ---
         function iniciarCiclo2() {
-            const qtd = parseInt(document.getElementById('c2Qtd').value);
-            const perfil = parseFloat(document.getElementById('c2Perfil').value);
-            
-            state.ciclo2.configQtd = qtd;
-            state.ciclo2.configPerfil = perfil;
-
-            const valorPorCard = state.stakeValor * perfil;
-            state.ciclo2.totalAlocado = qtd * valorPorCard;
-            state.ciclo2.metaVal = state.ciclo2.totalAlocado * 0.05; // +5%
-            state.ciclo2.limiteVal = state.ciclo2.totalAlocado * 0.15; // -15%
-
-            state.ciclo2.somaGreens = 0;
-            state.ciclo2.somaReds = 0;
-            state.ciclo2.resultadoLiquido = 0;
-            state.ciclo2.cardsUsados = 0;
             state.ciclo2.ativo = true;
-
-            saveData();
-            renderizarCiclo2Ativo();
-        }
-        function aplicarResultadoC2(index) {
-            const gValBruto = parseMoney(document.getElementById(`c2-green-${index}`).value);
-            const rVal = parseMoney(document.getElementById(`c2-red-${index}`).value);
-            
-            if (gValBruto === 0 && rVal === 0) return;
-            if (document.getElementById(`c2-actions-${index}`).classList.contains('hidden')) return;
-
-            if (gValBruto > 0) {
-                const valLiquido = getLiquidGreen(gValBruto); // Aplica comissão se ligada
-                state.bancaAtual += valLiquido;
-                state.ciclo2.somaGreens += valLiquido;
-                state.greensCountDia++; 
-                document.getElementById(`c2-msg-${index}`).innerHTML = `<span class="text-green">✅ Green: ${formatMoney(valLiquido)} (Bruto ${formatMoney(gValBruto)})</span>`;
-            } else {
-                state.bancaAtual -= rVal;
-                state.ciclo2.somaReds += rVal;
-                state.redsCountDia++; 
-                document.getElementById(`c2-msg-${index}`).innerHTML = `<span class="text-red">❌ Red: ${formatMoney(rVal)}</span>`;
-            }
-
-            state.ciclo2.resultadoLiquido = state.ciclo2.somaGreens - state.ciclo2.somaReds;
-            state.ciclo2.cardsUsados++;
-
-            document.getElementById(`c2-actions-${index}`).classList.add('hidden');
-            document.getElementById(`c2-msg-${index}`).classList.remove('hidden');
-
-            saveData();
-            atualizarResultadoVisualC2();
-            verificarRegrasCiclo2(true); 
-        }
-
-        function renderizarCiclo2Ativo() {
             document.getElementById('configCiclo2').classList.add('hidden');
             document.getElementById('c2Dashboard').classList.remove('hidden');
-            document.getElementById('areaCardsCiclo2').innerHTML = '';
-            
-            document.getElementById('c2DisplayTotal').innerText = formatMoney(state.ciclo2.totalAlocado);
-            document.getElementById('c2DisplayMeta').innerText = formatMoney(state.ciclo2.metaVal);
-            document.getElementById('c2DisplayLimite').innerText = formatMoney(state.ciclo2.limiteVal);
-            atualizarResultadoVisualC2();
+            renderC2();
+            save();
+        }
 
-            verificarRegrasCiclo2(false); 
-
+        function renderC2() {
+            const qtd = parseInt(document.getElementById('c2Qtd').value);
             const container = document.getElementById('areaCardsCiclo2');
-            const valorEntrada = (state.ciclo2.totalAlocado / state.ciclo2.configQtd); 
-            const textoRedMax = formatMoney(valorEntrada * 0.30); 
-
-            for (let i = 1; i <= state.ciclo2.configQtd; i++) {
-                const div = document.createElement('div');
-                div.className = 'card';
-                div.innerHTML = `
-                    <h4>Entrada ${i}</h4>
-                    <div class="entry-row"><span>Valor Entrada:</span> <strong>${formatMoney(valorEntrada)}</strong></div>
-                    <div class="text-red" style="font-size: 0.8rem; margin-bottom:10px;">Red máx sugerido: ${textoRedMax}</div>
-                    
-                    <div id="c2-actions-${i}">
-                        <input type="text" id="c2-green-${i}" placeholder="Green (R$)" class="c2-inp" oninput="maskCurrency(this)">
-                        <input type="text" id="c2-red-${i}" placeholder="Red (R$)" class="c2-inp" oninput="maskCurrency(this)">
-                        <button class="btn btn-primary" onclick="aplicarResultadoC2(${i})">Aplicar Resultado</button>
-                    </div>
-                    <div id="c2-msg-${i}" class="hidden" style="font-weight:bold; margin-top:5px;"></div>
-                `;
-                container.appendChild(div);
+            container.innerHTML = '';
+            const valEntrada = (state.stakeValor * 0.25);
+            
+            for(let i=0; i<qtd; i++) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `<h4>Entrada ${i+1} (${formatMoney(valEntrada)})</h4>
+                    <div class="flex"><input type="text" placeholder="Green" oninput="maskCurrency(this)" id="c2g${i}">
+                    <input type="text" placeholder="Red" oninput="maskCurrency(this)" id="c2r${i}"></div>
+                    <button class="btn btn-primary" onclick="aplicarC2(${i}, ${valEntrada})">Aplicar</button>`;
+                container.appendChild(card);
             }
         }
-        function atualizarResultadoVisualC2() {
-            const liq = state.ciclo2.resultadoLiquido;
-            const total = state.ciclo2.totalAlocado;
-            const perc = total > 0 ? (liq / total * 100).toFixed(2) : 0;
+
+        function aplicarC2(idx, entrada) {
+            const g = parseMoney(document.getElementById(`c2g${idx}`).value);
+            const r = parseMoney(document.getElementById(`c2r${idx}`).value);
+            if(g > 0) state.bancaAtual += (state.comissaoAtiva ? g * 0.961 : g);
+            else if(r > 0) state.bancaAtual -= r;
             
-            const el = document.getElementById('c2DisplayResultado');
-            el.innerText = `${formatMoney(liq)} (${perc}%)`;
-            el.className = liq >= 0 ? 'text-green dash-val' : 'text-red dash-val';
-        }
-
-        function verificarRegrasCiclo2(executarAcoes) {
-            const liq = state.ciclo2.resultadoLiquido;
-            const meta = state.ciclo2.metaVal;
-            const limite = state.ciclo2.limiteVal; 
-
-            document.getElementById('alertaMetaCiclo2').classList.add('hidden');
-            document.getElementById('alertaLimiteCiclo2').classList.add('hidden');
-            document.getElementById('btnIrCicloFinal').classList.add('hidden');
-
-            if (liq <= (limite * -1)) {
-                document.getElementById('alertaLimiteCiclo2').classList.remove('hidden');
+            const liq = state.bancaAtual - state.bancaInicial;
+            if (liq < -(state.stakeValor * 0.5)) {
                 document.getElementById('btnIrCicloFinal').classList.remove('hidden');
             }
-
-            if (liq >= meta) {
-                document.getElementById('alertaMetaCiclo2').classList.remove('hidden');
-                if (executarAcoes) {
-                    setTimeout(() => {
-                        alert("Meta do Ciclo 2 atingida! Voltando ao START.");
-                        resetCiclo2State(); 
-                        document.getElementById('pageStart').classList.remove('hidden');
-                        document.getElementById('pageCiclo2').classList.add('hidden');
-                        saveData();
-                    }, 2000);
-                }
-                return;
-            }
-
-            if (executarAcoes && state.ciclo2.cardsUsados >= state.ciclo2.configQtd) {
-                document.getElementById('msgReincioCiclo2').classList.remove('hidden');
-                setTimeout(() => {
-                    document.getElementById('msgReincioCiclo2').classList.add('hidden');
-                    iniciarCiclo2(); 
-                }, 2500);
-            }
+            save();
         }
 
         function irParaCicloFinal() {
             document.getElementById('pageCiclo2').classList.add('hidden');
             document.getElementById('pageCicloFinal').classList.remove('hidden');
-            state.cicloFinal.ativo = true;
-            resetCicloFinalState(); 
-            saveData();
+            save();
         }
 
-        // --- PÁGINA 3: CICLO FINAL ---
-        
-        function resetCicloFinalState() {
-            state.cicloFinal.ativo = false;
-            state.cicloFinal.cardsUsados = 0;
-            state.cicloFinal.greensCount = 0;
+        function gerarCardsCicloFinal() {
+            const container = document.getElementById('areaCardsCicloFinal');
+            container.innerHTML = '';
+            const val = state.stakeValor * 0.8;
+            for(let i=0; i<2; i++) {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `<h4>Recuperação ${i+1} (${formatMoney(val)})</h4>
+                    <div class="flex"><input type="text" placeholder="Green" oninput="maskCurrency(this)" id="cfg${i}">
+                    <input type="text" placeholder="Red" oninput="maskCurrency(this)" id="cfr${i}"></div>
+                    <button class="btn btn-primary" onclick="aplicarCF(${i})">Aplicar</button>`;
+                container.appendChild(card);
+            }
+            document.getElementById('configCicloFinal').classList.add('hidden');
+        }
+
+        function aplicarCF(idx) {
+            const g = parseMoney(document.getElementById(`cfg${idx}`).value);
+            const r = parseMoney(document.getElementById(`cfr${idx}`).value);
+            if(g > 0) {
+                state.bancaAtual += (state.comissaoAtiva ? g * 0.961 : g);
+                document.getElementById('btnConcluidoFinal').classList.remove('hidden');
+            } else if (r > 0) {
+                state.bancaAtual -= r;
+                document.getElementById('msgEncerramentoFinal').classList.remove('hidden');
+            }
+            save();
         }
 
         function reiniciarCicloFinal() {
-            alert("Redirecionando para o START com a banca atual.");
-            resetCiclo2State(); 
-            resetCicloFinalState();
-            
-            document.getElementById('pageCicloFinal').classList.add('hidden');
-            document.getElementById('pageStart').classList.remove('hidden');
-            
-            restaurarEstadoStart();
-            saveData();
-        }
-
-
-        function gerarCardsCicloFinal() {
-            if (state.cicloFinal.ativo && state.cicloFinal.cardsUsados > 0) return;
-
-            const perfil = parseFloat(document.getElementById('cfPerfil').value);
-            const valEntrada = state.stakeValor * perfil; 
-            const valRedMax = valEntrada * 0.30; 
-
-            state.cicloFinal.greensCount = 0;
-            state.cicloFinal.cardsUsados = 0;
-            state.cicloFinal.totalCards = 2;
-
-            const container = document.getElementById('areaCardsCicloFinal');
-            container.innerHTML = '';
-            document.getElementById('configCicloFinal').classList.add('hidden');
-            document.getElementById('msgEncerramentoFinal').classList.add('hidden'); 
-            document.getElementById('msgSucessoFinal').classList.add('hidden'); 
-            document.getElementById('btnConcluidoFinal').classList.add('hidden');
-            
-
-            for (let i = 1; i <= state.cicloFinal.totalCards; i++) {
-                const div = document.createElement('div');
-                div.className = 'card';
-                div.innerHTML = `
-                    <h4>Recuperação ${i}</h4>
-                    <div class="entry-row"><span>Valor Entrada:</span> <strong>${formatMoney(valEntrada)}</strong></div>
-                    <div class="text-red" style="font-size: 0.8rem; margin-bottom:10px;">Red máx recomendado (30%): ${formatMoney(valRedMax)}</div>
-                    
-                    <div id="cf-actions-${i}">
-                        <input type="text" id="cf-green-${i}" placeholder="Green (R$)" oninput="maskCurrency(this)">
-                        <input type="text" id="cf-red-${i}" placeholder="Red (R$)" oninput="maskCurrency(this)">
-                        <button class="btn btn-primary" onclick="aplicarResultadoCF(${i})">Aplicar</button>
-                    </div>
-                    <div id="cf-msg-${i}" class="hidden" style="font-weight:bold; margin-top:5px;"></div>
-                `;
-                container.appendChild(div);
-            }
-            saveData();
-        }
-
-        function aplicarResultadoCF(index) {
-            const gValBruto = parseMoney(document.getElementById(`cf-green-${index}`).value);
-            const rVal = parseMoney(document.getElementById(`cf-red-${index}`).value);
-            const msgDiv = document.getElementById(`cf-msg-${index}`);
-            
-            if (document.getElementById(`cf-actions-${index}`).classList.contains('hidden')) return;
-
-            if (gValBruto > 0) {
-                const valLiquido = getLiquidGreen(gValBruto); // Aplica comissão se ligada
-                state.bancaAtual += valLiquido;
-                state.cicloFinal.greensCount++;
-                state.greensCountDia++; 
-                msgDiv.innerHTML = `<span class="text-green">✅ Green: ${formatMoney(valLiquido)} (Bruto ${formatMoney(gValBruto)})</span>`;
-            } else if (rVal > 0) {
-                state.bancaAtual -= rVal;
-                state.redsCountDia++; 
-                msgDiv.innerHTML = `<span class="text-red">❌ Red: ${formatMoney(rVal)}</span>`;
-            } else return;
-
-            state.cicloFinal.cardsUsados++; 
-
-            document.getElementById(`cf-actions-${index}`).classList.add('hidden');
-            msgDiv.classList.remove('hidden');
-            saveData();
-
-            verificarEncerramentoCicloFinal(); 
-        }
-
-        function verificarEncerramentoCicloFinal() {
-            if (state.cicloFinal.cardsUsados >= state.cicloFinal.totalCards) {
-                document.getElementById('configCicloFinal').classList.add('hidden'); 
-                
-                if (state.cicloFinal.greensCount >= 2) {
-                    document.getElementById('msgSucessoFinal').classList.remove('hidden');
-                    document.getElementById('btnConcluidoFinal').classList.remove('hidden');
-                    document.getElementById('msgEncerramentoFinal').classList.add('hidden');
-                } else {
-                    document.getElementById('msgEncerramentoFinal').classList.remove('hidden');
-                    document.getElementById('msgSucessoFinal').classList.add('hidden');
-                    document.getElementById('btnConcluidoFinal').classList.add('hidden');
-                }
-            }
+            location.reload();
         }
 
         function voltarParaCiclo2() {
             document.getElementById('pageCicloFinal').classList.add('hidden');
             document.getElementById('pageCiclo2').classList.remove('hidden');
-            
-            document.getElementById('configCicloFinal').classList.remove('hidden');
-            document.getElementById('areaCardsCicloFinal').innerHTML = '';
-            document.getElementById('msgSucessoFinal').classList.add('hidden');
-            document.getElementById('btnConcluidoFinal').classList.add('hidden');
-            document.getElementById('msgEncerramentoFinal').classList.add('hidden');
-            
-            resetCiclo2State();
-            resetCicloFinalState(); 
-            saveData();
         }
 
-        // --- RESUMO ---
-        function renderResumo() {
-            const sessionName = document.getElementById('sessionName').value;
-            const titleElement = document.getElementById('resumoTitulo');
-            titleElement.innerHTML = `📊 Resumo ${sessionName ? '— "' + sessionName + '"' : ''}`;
+        // --- SISTEMA ---
+        function save() {
+            localStorage.setItem(APP_KEY, JSON.stringify(state));
+            updateUI();
+        }
 
-            document.getElementById('resumoBancaIni').innerText = formatMoney(state.bancaInicial);
-            document.getElementById('resumoBancaAtual').innerText = formatMoney(state.bancaAtual);
-            
-            const diff = state.bancaAtual - state.bancaInicial;
-            const perc = state.bancaInicial > 0 ? ((diff/state.bancaInicial)*100).toFixed(2) : 0;
-            const elRes = document.getElementById('resumoResultado');
-            elRes.innerText = `${formatMoney(diff)} (${perc}%)`;
-            elRes.className = diff >= 0 ? 'text-green' : 'text-red';
-            
-            document.getElementById('resumoGreens').innerText = state.greensCountDia;
-            document.getElementById('resumoReds').innerText = state.redsCountDia;
-            
-            const list = document.getElementById('listaHistorico');
-            list.innerHTML = '';
-            state.historico.forEach(h => {
-                const div = document.createElement('div');
-                div.className = 'history-item';
-                div.innerHTML = `<div><b>${h.nome}</b><br><small>${h.data}</small></div><div class="${h.resultado >= 0 ? 'text-green' : 'text-red'}"><b>${formatMoney(h.resultado)}</b></div>`;
-                list.appendChild(div);
+        function updateUI() {
+            document.getElementById('topoBancaInicial').innerText = formatMoney(state.bancaInicial);
+            document.getElementById('topoBancaAtual').innerText = formatMoney(state.bancaAtual);
+            document.getElementById('topoBancaAtual').className = state.bancaAtual >= state.bancaInicial ? 'text-green' : 'text-red';
+        }
+
+        function abrirModalFinalizar() {
+            document.getElementById('modalFinalBanca').innerText = formatMoney(state.bancaAtual);
+            toggleModal('modalFinalizar');
+        }
+
+        function executarFinalizarDia() {
+            state.historico.unshift({
+                nome: state.sessionName || 'Sem nome',
+                data: new Date().toLocaleDateString(),
+                resultado: state.bancaAtual - state.bancaInicial
             });
+            state.bancaInicial = 0;
+            state.bancaAtual = 0;
+            state.sessionName = '';
+            localStorage.setItem(APP_KEY, JSON.stringify(state));
+            location.reload();
         }
 
-        window.onload = loadData;
+        function toggleModal(id) {
+            const m = document.getElementById(id);
+            m.classList.toggle('hidden');
+            if(id === 'modalResumo') {
+                const res = document.getElementById('resumoGeral');
+                const diff = state.bancaAtual - state.bancaInicial;
+                res.innerHTML = `
+                    <div class="card">
+                        <div class="entry-row"><span>Sessão:</span> <b>${state.sessionName}</b></div>
+                        <div class="entry-row"><span>Resultado:</span> <b class="${diff>=0?'text-green':'text-red'}">${formatMoney(diff)}</b></div>
+                    </div>`;
+                const lista = document.getElementById('listaHistorico');
+                lista.innerHTML = state.historico.map(h => `
+                    <div class="entry-row">
+                        <span>${h.data} - ${h.nome}</span>
+                        <b class="${h.resultado>=0?'text-green':'text-red'}">${formatMoney(h.resultado)}</b>
+                    </div>
+                `).join('');
+            }
+        }
+
+        window.onload = () => {
+            const saved = localStorage.getItem(APP_KEY);
+            if(saved) {
+                state = JSON.parse(saved);
+                document.getElementById('sessionName').value = state.sessionName;
+                if(state.bancaInicial > 0) {
+                    document.getElementById('blocoDefinirBanca').classList.add('hidden');
+                    document.getElementById('blocoAjustes').classList.remove('hidden');
+                    document.getElementById('operacoesStart').classList.remove('hidden');
+                    calcularStake();
+                }
+            }
+            validarSessao();
+            updateUI();
+        };
+
+        function toggleTooltip(id) { document.getElementById(id).classList.toggle('hidden'); }
     </script>
 </body>
 </html>
